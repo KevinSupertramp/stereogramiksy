@@ -32,10 +32,13 @@ StereogramGenerator::~StereogramGenerator()
 //#define maxX 768                                        /* Image and object are both maxX by maxY pixels */
 //#define maxY 256
 
-void StereogramGenerator::generate()
+void StereogramGenerator::generate(int convex)
 {
-    *imageOrg = imageOrg->scaledToHeight(720);
-    *imageOrg = imageOrg->scaledToWidth(1280);
+    if(imageOrg->height() >= 720)
+        *imageOrg = imageOrg->scaledToHeight(720);
+    else if(imageOrg->width()>= 1280)
+        *imageOrg = imageOrg->scaledToWidth(1280);
+
     int maxX = imageOrg->width();
     int maxY = imageOrg->height();
 
@@ -52,7 +55,7 @@ void StereogramGenerator::generate()
 
       QVector<QVector<float> > imageDepth;
 
-    CalculateImageDepth(imageDepth);
+    CalculateImageDepth(imageDepth,convex);
 
 
     /////// tutaj powinno dzia³aæ - ale niestety nie dzia³a góra
@@ -129,8 +132,14 @@ void StereogramGenerator::generate()
     }
 }
 
-void StereogramGenerator::CalculateImageDepth(QVector<QVector<float> > &imageDepth)
+void StereogramGenerator::CalculateImageDepth(QVector<QVector<float> > &imageDepth, int convex)
 {
+    int tmp;
+    if(convex == 1)
+        tmp = 1;
+    else
+        tmp=-1;
+
     // calculate depth
     for(int x=0;x<imageOrg->width();++x)
     {
@@ -139,7 +148,7 @@ void StereogramGenerator::CalculateImageDepth(QVector<QVector<float> > &imageDep
         for(int y=0;y<imageOrg->height();++y)
         {
 //            Z[x][y] = 1 - (qGray(imageOrg->pixel(x,y))/255.0) ;
-            vtmp.append((float)(1 - (qGray(imageOrg->pixel(x,y))/255.0)));
+            vtmp.append((float)(convex - (qGray(imageOrg->pixel(x,y))/255.0)*tmp));
 //            Z.at(x).at(y) << (float)(1 - (qGray(imageOrg->pixel(x,y))/255.0));
             //qDebug() << x << y << Z[x][y];
         }

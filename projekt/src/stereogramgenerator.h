@@ -13,9 +13,9 @@ class StereogramGenerator
         inline void setImage(QImage *img){imageOrg = img;}
         inline QImage* getImage(){return imageStereogram;}
 
-        void generate();
+        void generate(int convex);
 
-        void CalculateImageDepth(QVector<QVector<float> > &imageDepth); //(between 0 and 1)
+        void CalculateImageDepth(QVector<QVector<float> > &imageDepth, int convex); //(between 0 and 1)
 
         inline int DecalageSelonLaCouleur(int ndg)
         {
@@ -35,7 +35,7 @@ class StereogramGenerator
     private:
         QPixmap     *originalPixelmap;
         QImage      *imageOrg;
-        Qimage      *imageOrgCpy;
+        QImage      *imageOrgCpy;
         QImage      *imageStereogram;
         QImage      *tmp;
 

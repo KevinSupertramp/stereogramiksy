@@ -86,7 +86,7 @@ bool MainWindow::wczytajPlik(QString fileName)
             qDebug() << "Numer petli" << i;
             imageCpy=imageOrg;
             a.setImage(imageCpy);
-            a.generate();
+            a.generate(1);
             scaledImage = imageCpy->scaled(ui->label->width(),ui->label->height(),Qt::KeepAspectRatio);
             ui->label->setPixmap(QPixmap::fromImage(scaledImage,Qt::AutoColor));
             movie->jumpToFrame(i);
@@ -105,7 +105,7 @@ bool MainWindow::wczytajPlik(QString fileName)
 
     a.setImage(imageCpy);
 
-    a.generate();
+    a.generate(1);
 
     imageCpy = a.getImage();
 
