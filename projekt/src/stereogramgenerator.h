@@ -15,7 +15,7 @@ class StereogramGenerator
 
         void generate();
 
-        void CalculateImageDepth(); //(between 0 and 1)
+        void CalculateImageDepth(QVector<QVector<float> > &imageDepth); //(between 0 and 1)
 
         inline int DecalageSelonLaCouleur(int ndg)
         {
@@ -35,6 +35,7 @@ class StereogramGenerator
     private:
         QPixmap     *originalPixelmap;
         QImage      *imageOrg;
+        Qimage      *imageOrgCpy;
         QImage      *imageStereogram;
         QImage      *tmp;
 

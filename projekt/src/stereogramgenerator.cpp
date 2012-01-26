@@ -34,8 +34,8 @@ StereogramGenerator::~StereogramGenerator()
 
 void StereogramGenerator::generate()
 {
-    *imageOrg = imageOrg->scaledToHeight(1080);
-    *imageOrg = imageOrg->scaledToWidth(720);
+    *imageOrg = imageOrg->scaledToHeight(720);
+    *imageOrg = imageOrg->scaledToWidth(1280);
     int maxX = imageOrg->width();
     int maxY = imageOrg->height();
 
@@ -50,35 +50,11 @@ void StereogramGenerator::generate()
 
 //    float Z[maxX][maxY];
 
-      QVector<QVector<float> > Z;
+      QVector<QVector<float> > imageDepth;
+
+    CalculateImageDepth(imageDepth);
 
 
-//    float **Z= new float *[maxX];
-//    for(int i=0;i<maxY;++i)
-//    {
-//        Z[i]= new float[maxY];
-//    }
-
-//    tmp = new QImage();
-//    tmp = new QImage(maxX,maxY,QImage::Format_RGB32);
-//    *tmp = imageOrg->copy();
-
-
-    // calculate depth
-    for(int x=0;x<imageOrg->width();++x)
-    {
-        QVector<float> vtmp;
-        vtmp.clear();
-        for(int y=0;y<imageOrg->height();++y)
-        {
-//            Z[x][y] = 1 - (qGray(imageOrg->pixel(x,y))/255.0) ;
-            vtmp.append((float)(1 - (qGray(imageOrg->pixel(x,y))/255.0)));
-//            Z.at(x).at(y) << (float)(1 - (qGray(imageOrg->pixel(x,y))/255.0));
-            //qDebug() << x << y << Z[x][y];
-        }
-        Z.append(vtmp);
-    }
-    // end o calculation
     /////// tutaj powinno dzia³aæ - ale niestety nie dzia³a góra
 
 
@@ -96,7 +72,7 @@ void StereogramGenerator::generate()
         for(int x=0;x<maxX;++x)
         {
 //            s = separation(Z[x][y]);
-             s = separation(Z.at(x).at(y));
+             s = separation(imageDepth.at(x).at(y));
 
             left = x - s/2;
             right = left + s;
@@ -111,8 +87,8 @@ void StereogramGenerator::generate()
                 {
 //                    zt = Z[x][y] + 2*(2 - mu*Z[x][y])*t/(mu*E);
 //                    visible = Z[x-t][y]<zt && Z[x+t][y]<zt;             /* False if obscured */
-                    zt = Z.at(x).at(y) + 2*(2 - mu*Z.at(x).at(y))*t/(mu*E);
-                    visible = Z.at(x-t).at(y) < zt && Z.at(x+t).at(y) < zt;             /* False if obscured */
+                    zt = imageDepth.at(x).at(y) + 2*(2 - mu*imageDepth.at(x).at(y))*t/(mu*E);
+                    visible = imageDepth.at(x-t).at(y) < zt && imageDepth.at(x+t).at(y) < zt;             /* False if obscured */
 
 
 
@@ -153,6 +129,23 @@ void StereogramGenerator::generate()
     }
 }
 
-void StereogramGenerator::CalculateImageDepth()
+void StereogramGenerator::CalculateImageDepth(QVector<QVector<float> > &imageDepth)
 {
+    // calculate depth
+    for(int x=0;x<imageOrg->width();++x)
+    {
+        QVector<float> vtmp;
+        vtmp.clear();
+        for(int y=0;y<imageOrg->height();++y)
+        {
+//            Z[x][y] = 1 - (qGray(imageOrg->pixel(x,y))/255.0) ;
+            vtmp.append((float)(1 - (qGray(imageOrg->pixel(x,y))/255.0)));
+//            Z.at(x).at(y) << (float)(1 - (qGray(imageOrg->pixel(x,y))/255.0));
+            //qDebug() << x << y << Z[x][y];
+        }
+        imageDepth.append(vtmp);
+    }
+    // end o calculation
+
+
 }
