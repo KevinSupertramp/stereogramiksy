@@ -70,6 +70,7 @@ bool MainWindow::wczytajPlik(QString fileName)
         movie->jumpToFrame(0);
         iloscKlatek = movie->frameCount();
         for(i=0;i<=iloscKlatek;i++){
+
             imageOrg = new QImage(movie->currentImage());
             //imageOrg = new QImage(tmp);
             qDebug() << "Numer petli" << i;
@@ -78,7 +79,7 @@ bool MainWindow::wczytajPlik(QString fileName)
             a.generate();
             scaledImage = imageCpy->scaled(ui->label->width(),ui->label->height(),Qt::KeepAspectRatio);
             ui->label->setPixmap(QPixmap::fromImage(scaledImage,Qt::AutoColor));
-            movie->jumpToNextFrame();
+            movie->jumpToFrame(i);
 
 
             //if(i==iloscKlatek){ i=0; movie->jumpToFrame(0);}
