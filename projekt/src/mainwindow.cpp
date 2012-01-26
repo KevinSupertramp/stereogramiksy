@@ -145,10 +145,25 @@ void MainWindow::on_pushButton_clicked()
     ui->stackedWidget->setCurrentIndex(0);
 }
 
-void MainWindow::on_pushButton_2_clicked()
+void MainWindow::on_pushButton_Games_clicked()
 {
     ui->stackedWidget->setCurrentIndex(2);
-    Games *game = new Games();
+    //Games *game = new Games();
+    QStringList listaGier;
+    QStringListModel *model;
+
+
+    QFile file(":new/prefix1/lista.txt");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {}
+
+    QTextStream in(&file);
+
+    while (!in.atEnd()) {
+        listaGier.append(in.readLine());
+
+         }
+     model = new QStringListModel(listaGier);
+     ui->listView->setModel(model);
 
 
 

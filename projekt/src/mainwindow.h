@@ -23,6 +23,7 @@ public:
     void saveFile();
     bool wczytajPlik(QString);
     void resizeEvent(QResizeEvent *);
+    Ui::MainWindow *ui;
     
 private slots:
 
@@ -35,12 +36,12 @@ private slots:
 
     void on_pushButton_clicked();
 
-    void on_pushButton_2_clicked();
+    void on_pushButton_Games_clicked();
 
     void on_pushButton_Save_clicked();
 
 private:
-    Ui::MainWindow *ui;
+    //Ui::MainWindow *ui;
 
     QString *fileName;
     QImage *imageOrg, *imageCpy;

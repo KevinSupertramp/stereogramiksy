@@ -20,3 +20,6 @@ HEADERS  += src/mainwindow.h \
 			src/games.h
 
 FORMS    += src/mainwindow.ui
+
+RESOURCES += \
+    zasoby/listaGier.qrc
