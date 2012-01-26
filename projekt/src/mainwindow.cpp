@@ -191,9 +191,18 @@ void MainWindow::loadGame(QString gra)
     QFile file("gry/opisy/"+gra+".txt");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {}
     QTextStream in(&file);
+    tytulGra = in.readLine();
+    ileObrazkowGra = in.readLine().toInt();
 
-    while (!in.atEnd()) {
-        //listaGier.append(in.readLine());
+    for(int i=0;i<ileObrazkowGra;i++){
+        adresObrazkaGra.append(in.readLine());
+    }
+    for(int i=0;i<ileObrazkowGra;i++){
+        hasloObrazkaGra.append(in.readLine());
+    }
 
-         }
+
+
+
+
 }

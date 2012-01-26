@@ -52,6 +52,14 @@ private:
     QImage *imageOrg, *imageCpy;
     QImage scaledImage;
     bool wczytano;
+
+    /* do gry */
+    QString tytulGra;
+    int ileObrazkowGra;
+    QStringList adresObrazkaGra;
+    QStringList hasloObrazkaGra;
+    int  punktyGra;
+    /* koniec do gry */
 };
 
 #endif // MAINWINDOW_H
