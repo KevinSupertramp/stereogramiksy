@@ -20,6 +20,7 @@ public:
 
     void update();
     void openFile();
+    void saveFile();
     bool wczytajPlik(QString);
     void resizeEvent(QResizeEvent *);
     
@@ -35,6 +36,8 @@ private slots:
     void on_pushButton_clicked();
 
     void on_pushButton_2_clicked();
+
+    void on_pushButton_Save_clicked();
 
 private:
     Ui::MainWindow *ui;

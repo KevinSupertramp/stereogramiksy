@@ -49,6 +49,13 @@ void MainWindow::openFile() // dokoñczyæ openFile
     }
 }
 
+void MainWindow::saveFile()
+{
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save as image..."), QDir::homePath(), tr("PNG Image Files (*.png)"));
+    imageCpy->save(fileName, "PNG");
+
+}
+
 void MainWindow::update()
 {
     scaledImage = imageCpy->scaled(ui->label->width(),ui->label->height(),Qt::KeepAspectRatio);
@@ -142,4 +149,9 @@ void MainWindow::on_pushButton_2_clicked()
 
 
 
+}
+
+void MainWindow::on_pushButton_Save_clicked()
+{
+    saveFile();
 }
