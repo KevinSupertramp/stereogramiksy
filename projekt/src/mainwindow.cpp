@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     ui->stackedWidget->setCurrentIndex(0);
     ui->stackedWidget->setSizeIncrement(ui->centralWidget->width(),ui->centralWidget->height());
+    ui->pushButton_Save->setDisabled(true);
 
 
 }
@@ -47,6 +48,7 @@ void MainWindow::openFile() // dokoñczyæ openFile
     {
         qDebug() << "Blad openFile() ";
     }
+    ui->pushButton_Save->setDisabled(false);
 }
 
 void MainWindow::saveFile()
