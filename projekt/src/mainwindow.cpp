@@ -42,13 +42,14 @@ void MainWindow::openFile() // dokoñczyæ openFile
         if (!fileName.isEmpty())
         {
            wczytano = wczytajPlik(fileName);
+           ui->pushButton_Save->setDisabled(false);
         }
     }
     catch(std::exception &e)
     {
         qDebug() << "Blad openFile() ";
     }
-    ui->pushButton_Save->setDisabled(false);
+
 }
 
 void MainWindow::saveFile()
