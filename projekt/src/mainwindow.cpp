@@ -173,3 +173,27 @@ void MainWindow::on_pushButton_Save_clicked()
 {
     saveFile();
 }
+
+void MainWindow::on_pushButton_wg_Graj_clicked()
+{
+    QModelIndex wybor = ui->listView->currentIndex();
+    loadGame(wybor.data().toString());
+}
+
+void MainWindow::on_pushButton_wg_Menu_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(0);
+}
+
+void MainWindow::loadGame(QString gra)
+{
+    ui->stackedWidget->setCurrentIndex(3);
+    QFile file("gry/opisy/"+gra+".txt");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {}
+    QTextStream in(&file);
+
+    while (!in.atEnd()) {
+        //listaGier.append(in.readLine());
+
+         }
+}

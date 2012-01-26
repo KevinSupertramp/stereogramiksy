@@ -23,6 +23,7 @@ public:
     void saveFile();
     bool wczytajPlik(QString);
     void resizeEvent(QResizeEvent *);
+    void loadGame(QString);
     Ui::MainWindow *ui;
     
 private slots:
@@ -39,6 +40,10 @@ private slots:
     void on_pushButton_Games_clicked();
 
     void on_pushButton_Save_clicked();
+
+    void on_pushButton_wg_Graj_clicked();
+
+    void on_pushButton_wg_Menu_clicked();
 
 private:
     //Ui::MainWindow *ui;
