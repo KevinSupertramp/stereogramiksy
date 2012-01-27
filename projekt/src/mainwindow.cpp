@@ -15,6 +15,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->pushButton_Save->setDisabled(true);
 
     connect(&a,SIGNAL(setStatusBarLabel(QString)),this,SLOT(onStatusBarChanged(QString)));
+
+    connect(&games,SIGNAL(setModelOfListView(QStringListModel*)),this,SLOT(onListViewChanged(QStringListModel*)));
 }
 
 MainWindow::~MainWindow()
@@ -68,6 +70,8 @@ void MainWindow::update()
 
 bool MainWindow::wczytajPlik(QString fileName)
 {
+
+
 
 //    ui->statusBar->showMessage("Generowanie stereogramu");
 //    setStatusBar_message("Generowanie stereogramu | proszê czekaæ");
@@ -133,7 +137,7 @@ bool MainWindow::wczytajPlik(QString fileName)
 void MainWindow::setLabel_info(int w, int h, float size, bool allgray)
 {
     QString t;
-    t.append("Wczytano obraz:\n");
+    t.append(QString("Wczytano obraz:\n"));
     t.append(QString("  rozdzielczosc: ").toUtf8());
     t.append(QString("%1").arg(w));
     t.append("x");
@@ -243,6 +247,8 @@ void MainWindow::on_pushButton_wg_Menu_clicked()
 
 void MainWindow::loadGame(QString gra)
 {
+    games.dziala();
+
     ui->stackedWidget->setCurrentIndex(3);
     QFile file("gry/opisy/"+gra+".txt");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {}
@@ -259,9 +265,6 @@ void MainWindow::loadGame(QString gra)
     punktyGra=ktoryObrazekGra=0;
     statsGame(0);
     showGame();
-
-
-
 }
 
 void MainWindow::statsGame(int wygrana)
@@ -327,4 +330,7 @@ void MainWindow::on_pushButton_2_end_menu_clicked()
 }
 
 
-
+void MainWindow::onListViewChanged(QStringListModel *model)
+{
+    qDebug() << "onListViewChanged" << " dziala.";
+}

@@ -1,14 +1,12 @@
 #include "stereogramgenerator.h"
 
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
-
 #include <iostream>
 #include <cstdlib>
 
 StereogramGenerator::StereogramGenerator(QObject *parent) :
     QObject(parent)
 {
+    wczytano = false;
     // uzywac
     qDebug() << "Konstruktor klasy: SteogramGenerator()";
 }
@@ -25,7 +23,7 @@ StereogramGenerator::StereogramGenerator(QObject *parent) :
 
 StereogramGenerator::~StereogramGenerator()
 {
-    delete originalPixelmap;
+//    delete originalPixelmap;
 }
 
 
@@ -51,9 +49,6 @@ void StereogramGenerator::generate(int convex, bool circles)
     int maxY = imageOrg->height();
 
     qDebug() << " 2 " << maxX << " " << maxY;
-
-    originalPixelmap = new QPixmap(imageOrg->width(),imageOrg->height());
-    originalPixelmap->fromImage(*imageOrg);
 
     imageStereogram = new QImage(maxX,maxY,QImage::Format_RGB32);
     imageOrgCpy = new QImage(maxX,maxY,QImage::Format_RGB32);
