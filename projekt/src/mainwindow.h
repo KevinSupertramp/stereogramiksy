@@ -60,6 +60,8 @@ private slots:
     void on_pushButton_game_Ok_clicked();
 
     void on_pushButton_2_end_menu_clicked();
+    void on_checkBox_clicked();
+
 protected:
 //    Ui::MainWindow *ui;
 

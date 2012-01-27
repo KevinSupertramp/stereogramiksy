@@ -326,3 +326,5 @@ void MainWindow::on_pushButton_2_end_menu_clicked()
     ui->stackedWidget->setCurrentIndex(0);
 }
 
+
+
