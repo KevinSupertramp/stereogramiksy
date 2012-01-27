@@ -6,14 +6,22 @@
 #include <iostream>
 #include <cstdlib>
 
-StereogramGenerator::StereogramGenerator()
+StereogramGenerator::StereogramGenerator(QObject *parent) :
+    QObject(parent)
 {
-    // inicjalizacja zmiennych
-    //imageOrg.fill(0);
-    //imageStereogram.fill(0);
-
+    // uzywac
     qDebug() << "Konstruktor klasy: SteogramGenerator()";
 }
+
+
+//StereogramGenerator::StereogramGenerator()
+//{
+//    // inicjalizacja zmiennych
+//    //imageOrg.fill(0);
+//    //imageStereogram.fill(0);
+
+//    qDebug() << "Konstruktor klasy: SteogramGenerator()";
+//}
 
 StereogramGenerator::~StereogramGenerator()
 {
@@ -55,6 +63,8 @@ void StereogramGenerator::generate(int convex, bool circles)
     CalculateImageDepth(imageDepth,convex);
 
 //    MainWindow::setStatusBar_message("olaBOga");
+
+    emit setStatusBarLabel("Generowanie ...");
 
     for(int y=0;y<maxY;++y)
     {

@@ -4,10 +4,13 @@
 #include<iostream>
 #include<QtGui>
 
-class StereogramGenerator
+class StereogramGenerator : public QObject
 {
-    public:
-        StereogramGenerator();
+    Q_OBJECT
+public:
+        explicit StereogramGenerator(QObject *parent = 0);
+
+//        StereogramGenerator();
         ~StereogramGenerator();
 
         inline void setImage(QImage *img){imageOrg = img;}
@@ -17,6 +20,10 @@ class StereogramGenerator
         void drawCirclesOnImage(int maxX, int maxY);
 
         void CalculateImageDepth(QVector<QVector<double> > &imageDepth, int convex); //(between 0 and 1)
+
+    signals:
+        void setStatusBarLabel(QString tmp);
+    public slots:
 
     private:
         QPixmap     *originalPixelmap;

@@ -34,11 +34,12 @@ public:
     void endGame();
 
     void setLabel_info(int w, int h, float size, bool allgray);
-    void setStatusBar_message(QString tmp);
+//    void setStatusBar_message(QString tmp);
     Ui::MainWindow *ui;
     
 private slots:
 
+    void onStatusBarChanged(QString tmp);
 
     void on_pushButton_Generate_clicked();
 

@@ -14,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->stackedWidget->setSizeIncrement(ui->centralWidget->width(),ui->centralWidget->height());
     ui->pushButton_Save->setDisabled(true);
 
-
+    connect(&a,SIGNAL(setStatusBarLabel(QString)),this,SLOT(onStatusBarChanged(QString)));
 }
 
 MainWindow::~MainWindow()
@@ -150,10 +150,10 @@ void MainWindow::setLabel_info(int w, int h, float size, bool allgray)
     ui->label_info->setText(t.toUtf8());
 }
 
-void MainWindow::setStatusBar_message(QString tmp)
+void MainWindow::onStatusBarChanged(QString tmp)
 {
     qDebug() << "setStatusBar_message" << tmp;
-    ui->statusBar->showMessage(tr("Ready"), 2000);
+    ui->statusBar->showMessage(tmp);
 }
 
 // --------------------
