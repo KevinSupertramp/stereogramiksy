@@ -128,9 +128,13 @@ void StereogramGenerator::generate(int convex)
 
     QPainter p;
     p.begin(imageStereogram);
+//    p.setPen(Qt::black);
+//    p.setFont(QFont("Arial", 30));
+//    p.drawText(rect(), Qt::AlignCenter, "Qtsdfsaadasd");
+    p.setBrush(QBrush(Qt::black));
     p.setPen(Qt::black);
-    p.drawRect(maxX/2-far/2,maxY*19/20,30,30);
-    p.drawRect(maxX/2+far/2,maxY*19/20,30,30);
+    p.drawEllipse(maxX/2-far/2,maxY*16/19,30,30);
+    p.drawEllipse(maxX/2+far/2,maxY*16/19,30,30);
     p.end();
 
 //    QPixmap *p = new QPixmap(imageStereogram->width(),imageStereogram->height());
@@ -170,8 +174,8 @@ QImage StereogramGenerator::drawRectOnImage(QPixmap &pix, int maxX, int maxY)
     QPainter p;
     p.begin(&pix);
     p.setPen(Qt::black);
-    p.drawEllipse(maxX/2-far/2,maxY*19/20,30,30);
-    p.drawEllipse(maxX/2+far/2,maxY*19/20,30,30);
+    p.drawEllipse(maxX/2 - eyeSeparation,maxY*19/20,30,30);
+    p.drawEllipse(maxX/2 + eyeSeparation,maxY*19/20,30,30);
     p.end();
 
     return pix.toImage().copy();
