@@ -6,6 +6,8 @@
 #include <iostream>
 #include <exception>
 
+#include "stereogramgenerator.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -18,6 +20,8 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    StereogramGenerator a;
+
     void update();
     void openFile();
     void saveFile();
@@ -29,7 +33,7 @@ public:
     void showGame();
     void endGame();
 
-    void setLabel_progres(QString tmp);
+    void setLabel_info(int w, int h, float size, bool allgray);
     void setStatusBar_message(QString tmp);
     Ui::MainWindow *ui;
     
@@ -52,10 +56,10 @@ private slots:
 
     void on_pushButton_wg_Menu_clicked();
 
+
     void on_pushButton_game_Ok_clicked();
 
     void on_pushButton_2_end_menu_clicked();
-
 protected:
 //    Ui::MainWindow *ui;
 
@@ -63,6 +67,8 @@ protected:
     QImage *imageOrg, *imageCpy;
     QImage scaledImage;
     bool wczytano;
+
+
 
     /* do gry */
     QString tytulGra;
