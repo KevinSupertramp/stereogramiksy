@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->stackedWidget->setCurrentIndex(0);
     ui->stackedWidget->setSizeIncrement(ui->centralWidget->width(),ui->centralWidget->height());
     ui->pushButton_Save->setDisabled(true);
+    ui->checkBox->setDisabled(true);
 
     connect(&a,SIGNAL(setStatusBarLabel(QString)),this,SLOT(onStatusBarChanged(QString)));
 }
@@ -42,6 +43,7 @@ void MainWindow::openFile() // dokoñczyæ openFile
         {
            wczytano = wczytajPlik(fileName);
            ui->pushButton_Save->setDisabled(false);
+           ui->checkBox->setDisabled(false);
         }
     }
     catch(std::exception &e)

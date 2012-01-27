@@ -25,7 +25,7 @@ StereogramGenerator::StereogramGenerator(QObject *parent) :
 
 StereogramGenerator::~StereogramGenerator()
 {
-    delete originalPixelmap;
+//    delete originalPixelmap;
 }
 
 
@@ -52,13 +52,15 @@ void StereogramGenerator::generate(int convex, bool circles)
 
     qDebug() << " 2 " << maxX << " " << maxY;
 
-    originalPixelmap = new QPixmap(imageOrg->width(),imageOrg->height());
-    originalPixelmap->fromImage(*imageOrg);
+//    originalPixelmap = new QPixmap(imageOrg->width(),imageOrg->height());
+//    originalPixelmap->fromImage(*imageOrg);
 
     imageStereogram = new QImage(maxX,maxY,QImage::Format_RGB32);
-    imageOrgCpy = new QImage(maxX,maxY,QImage::Format_RGB32);
+//    imageOrgCpy = new QImage(maxX,maxY,QImage::Format_RGB32);
 
-      QVector<QVector<double> > imageDepth;
+     QVector<QVector<double> > imageDepth;
+
+//     double imageDepth[maxX*maxY];
 
     CalculateImageDepth(imageDepth,convex);
 
@@ -127,9 +129,6 @@ void StereogramGenerator::generate(int convex, bool circles)
             if (same[x] == x) pix[x] = qrand()&1;/* Free choice; do it randomly */
             else pix[x] = pix[same[x]]; /* Constrained choice; obey constraint */
 
-
-
-
             //qDebug() << x << y << pix[x];
             imageStereogram->setPixel(x, y, pix[x]*16775930);
         }
@@ -154,9 +153,7 @@ void StereogramGenerator::CalculateImageDepth(QVector<QVector<double> > &imageDe
         vtmp.clear();
         for(int y=0;y<imageOrg->height();++y)
         {
-//            Z[x][y] = 1 - (qGray(imageOrg->pixel(x,y))/255.0) ;
             vtmp.append((float)(convex - (qGray(imageOrg->pixel(x,y))/255.0)*tmp));
-//            Z.at(x).at(y) << (float)(1 - (qGray(imageOrg->pixel(x,y))/255.0));
             //qDebug() << x << y << Z[x][y];
         }
         imageDepth.append(vtmp);
@@ -170,7 +167,7 @@ void StereogramGenerator::drawCirclesOnImage(int maxX, int maxY)
     p.begin(imageStereogram);
     p.setBrush(QBrush(Qt::black));
     p.setPen(Qt::black);
-    p.drawEllipse(maxX/2-far/2,maxY*16/19,30,30);
-    p.drawEllipse(maxX/2+far/2,maxY*16/19,30,30);
+    p.drawEllipse(maxX/2-far/2,maxY*16/19,20,20);
+    p.drawEllipse(maxX/2+far/2,maxY*16/19,20,20);
     p.end();
 }
