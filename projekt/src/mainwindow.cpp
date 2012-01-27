@@ -68,6 +68,11 @@ void MainWindow::update()
 
 bool MainWindow::wczytajPlik(QString fileName)
 {
+    setLabel_progres("udalo sie");
+
+//    ui->statusBar->showMessage("Generowanie stereogramu");
+//    setStatusBar_message("Generowanie stereogramu | proszê czekaæ");
+
     QImage tmp;
     qDebug() << "wczytajPlik" << fileName;
 
@@ -105,7 +110,7 @@ bool MainWindow::wczytajPlik(QString fileName)
 
     a.setImage(imageCpy);
 
-    a.generate(1);
+    a.generate(0);
 
     imageCpy = a.getImage();
 
@@ -113,8 +118,25 @@ bool MainWindow::wczytajPlik(QString fileName)
     ui->label->setPixmap(QPixmap::fromImage(scaledImage,Qt::AutoColor));
     }
     //delete imageCpy;
+
+    qDebug() << ui->statusBar->currentMessage();
+
     return true;
 }
+
+void MainWindow::setLabel_progres(QString tmp)
+{
+    ui->label_3->clear();
+    ui->label_3->setText(tmp + " coœ ");
+    ui->label_3->adjustSize();
+}
+
+void MainWindow::setStatusBar_message(QString tmp)
+{
+    qDebug() << "setStatusBar_message" << tmp;
+    ui->statusBar->showMessage(tr("Ready"), 2000);
+}
+
 // --------------------
 
 // -------EVENT'Y-------

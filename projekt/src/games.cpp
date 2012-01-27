@@ -17,6 +17,4 @@ Games::Games()
      model = new QStringListModel(listaGier);
      ui->listView->setModel(model);
 
-
-
 }

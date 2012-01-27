@@ -4,7 +4,9 @@
 #include<iostream>
 #include<QtGui>
 
-class StereogramGenerator
+#include "mainwindow.h"
+
+class StereogramGenerator : MainWindow
 {
     public:
         StereogramGenerator();
@@ -14,8 +16,9 @@ class StereogramGenerator
         inline QImage* getImage(){return imageStereogram;}
 
         void generate(int convex);
+        QImage drawRectOnImage(QPixmap &pix, int maxX, int maxY);
 
-        void CalculateImageDepth(QVector<QVector<float> > &imageDepth, int convex); //(between 0 and 1)
+        void CalculateImageDepth(QVector<QVector<double> > &imageDepth, int convex); //(between 0 and 1)
 
         inline int DecalageSelonLaCouleur(int ndg)
         {

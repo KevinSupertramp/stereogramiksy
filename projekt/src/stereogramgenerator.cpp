@@ -25,9 +25,9 @@ StereogramGenerator::~StereogramGenerator()
                                                         /* Algorithm for drawing an autostereogram  */
 #define round(X) (int)((X)+0.5)                         /* Often need to round rather than truncate */
 #define DPI 96                                          /* Output device has 72 pixels per inch */
-#define E round(2.5*DPI)                                /* Eye separation is assumed to be 2.5 in */
-#define mu (1/3.0)                                      /* Depth of field (fraction of viewing distance) */
-#define separation(Z) round((1-mu*Z)*E/(2-mu*Z))        /* Stereo separation corresponding to position Z */
+#define eyeSeparation round(2.755*DPI)                                /* Eye separation is assumed to be 2.5 in */
+#define depthOfField (1/2.6)                           /* Depth of field (fraction of viewing distance) */
+#define separation(Z) round((1-depthOfField*Z)*eyeSeparation/(2-depthOfField*Z))        /* Stereo separation corresponding to position Z */
 #define far separation(0)                               /* ... and corresponding to far plane, Z=0 */
 //#define maxX 768                                        /* Image and object are both maxX by maxY pixels */
 //#define maxY 256
@@ -47,19 +47,14 @@ void StereogramGenerator::generate(int convex)
     originalPixelmap = new QPixmap(imageOrg->width(),imageOrg->height());
     originalPixelmap->fromImage(*imageOrg);
 
-//    imageStereogram = new QImage(maxX,maxY,QImage::Format_RGB32);
-
     imageStereogram = new QImage(maxX,maxY,QImage::Format_RGB32);
+    imageOrgCpy = new QImage(maxX,maxY,QImage::Format_RGB32);
 
-//    float Z[maxX][maxY];
-
-      QVector<QVector<float> > imageDepth;
+      QVector<QVector<double> > imageDepth;
 
     CalculateImageDepth(imageDepth,convex);
 
-
-    /////// tutaj powinno dzia³aæ - ale niestety nie dzia³a góra
-
+    MainWindow::setStatusBar_message("olaBOga");
 
     for(int y=0;y<maxY;++y)
     {
@@ -74,7 +69,6 @@ void StereogramGenerator::generate(int convex)
 
         for(int x=0;x<maxX;++x)
         {
-//            s = separation(Z[x][y]);
              s = separation(imageDepth.at(x).at(y));
 
             left = x - s/2;
@@ -88,12 +82,9 @@ void StereogramGenerator::generate(int convex)
 
                 do
                 {
-//                    zt = Z[x][y] + 2*(2 - mu*Z[x][y])*t/(mu*E);
-//                    visible = Z[x-t][y]<zt && Z[x+t][y]<zt;             /* False if obscured */
-                    zt = imageDepth.at(x).at(y) + 2*(2 - mu*imageDepth.at(x).at(y))*t/(mu*E);
+                                                                                            /* False if obscured */
+                    zt = imageDepth.at(x).at(y) + 2*(2 - depthOfField*imageDepth.at(x).at(y))*t/(depthOfField*eyeSeparation);
                     visible = imageDepth.at(x-t).at(y) < zt && imageDepth.at(x+t).at(y) < zt;             /* False if obscured */
-
-
 
                     t++;
                 }
@@ -126,13 +117,21 @@ void StereogramGenerator::generate(int convex)
             if (same[x] == x) pix[x] = qrand()&1;/* Free choice; do it randomly */
             else pix[x] = pix[same[x]]; /* Constrained choice; obey constraint */
 
+
+
+
             //qDebug() << x << y << pix[x];
             imageStereogram->setPixel(x, y, pix[x]*16775930);
         }
     }
+
+//    QPixmap *p = new QPixmap(imageStereogram->width(),imageStereogram->height());
+//            p->fromImage(*imageStereogram);
+
+//    imageOrgCpy = &(drawRectOnImage(*originalPixelmap,maxX,maxY));
 }
 
-void StereogramGenerator::CalculateImageDepth(QVector<QVector<float> > &imageDepth, int convex)
+void StereogramGenerator::CalculateImageDepth(QVector<QVector<double> > &imageDepth, int convex)
 {
     int tmp;
     if(convex == 1)
@@ -143,7 +142,7 @@ void StereogramGenerator::CalculateImageDepth(QVector<QVector<float> > &imageDep
     // calculate depth
     for(int x=0;x<imageOrg->width();++x)
     {
-        QVector<float> vtmp;
+        QVector<double> vtmp;
         vtmp.clear();
         for(int y=0;y<imageOrg->height();++y)
         {
@@ -155,6 +154,18 @@ void StereogramGenerator::CalculateImageDepth(QVector<QVector<float> > &imageDep
         imageDepth.append(vtmp);
     }
     // end o calculation
+}
 
+QImage StereogramGenerator::drawRectOnImage(QPixmap &pix, int maxX, int maxY)
+{
+    QPainter p;
+    p.begin(&pix);
+    p.setPen(Qt::black);
+    p.drawEllipse(maxX/2-far/2,maxY*19/20,30,30);
+    p.drawEllipse(maxX/2+far/2,maxY*19/20,30,30);
+    p.end();
 
+    return (pix.toImage());
+
+//    imageStereogram->fill(pix);
 }

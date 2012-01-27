@@ -24,6 +24,9 @@ public:
     bool wczytajPlik(QString);
     void resizeEvent(QResizeEvent *);
     void loadGame(QString);
+
+    void setLabel_progres(QString tmp);
+    void setStatusBar_message(QString tmp);
     Ui::MainWindow *ui;
     
 private slots:
@@ -45,8 +48,8 @@ private slots:
 
     void on_pushButton_wg_Menu_clicked();
 
-private:
-    //Ui::MainWindow *ui;
+protected:
+//    Ui::MainWindow *ui;
 
     QString *fileName;
     QImage *imageOrg, *imageCpy;
