@@ -23,7 +23,11 @@ public:
     void saveFile();
     bool wczytajPlik(QString);
     void resizeEvent(QResizeEvent *);
+    /* funkcje do gry */
     void loadGame(QString);
+    void statsGame(int);
+    void showGame();
+    void endGame();
 
     void setLabel_progres(QString tmp);
     void setStatusBar_message(QString tmp);
@@ -48,6 +52,10 @@ private slots:
 
     void on_pushButton_wg_Menu_clicked();
 
+    void on_pushButton_game_Ok_clicked();
+
+    void on_pushButton_2_end_menu_clicked();
+
 protected:
 //    Ui::MainWindow *ui;
 
@@ -62,6 +70,7 @@ protected:
     QStringList adresObrazkaGra;
     QStringList hasloObrazkaGra;
     int  punktyGra;
+    int ktoryObrazekGra;
     /* koniec do gry */
 };
 

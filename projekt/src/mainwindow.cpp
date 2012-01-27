@@ -63,7 +63,8 @@ void MainWindow::update()
 {
     scaledImage = imageCpy->scaled(ui->label->width(),ui->label->height(),Qt::KeepAspectRatio);
     ui->label->setPixmap(QPixmap::fromImage(scaledImage,Qt::AutoColor));
-
+    scaledImage = imageCpy->scaled(ui->label_game->width(),ui->label_game->height(),Qt::KeepAspectRatio);
+    ui->label_game->setPixmap(QPixmap::fromImage(scaledImage,Qt::AutoColor));
 }
 
 bool MainWindow::wczytajPlik(QString fileName)
@@ -143,7 +144,7 @@ void MainWindow::setStatusBar_message(QString tmp)
 void MainWindow::resizeEvent(QResizeEvent *)
 {
 ui->stackedWidget->setSizeIncrement(ui->centralWidget->width(),ui->centralWidget->height());
-    if(wczytano)
+    if(wczytano || (ui->stackedWidget->currentIndex()==3))
     {
 
         update();
@@ -222,9 +223,73 @@ void MainWindow::loadGame(QString gra)
     for(int i=0;i<ileObrazkowGra;i++){
         hasloObrazkaGra.append(in.readLine());
     }
+    punktyGra=ktoryObrazekGra=0;
+    statsGame(0);
+    showGame();
 
 
 
+}
 
+void MainWindow::statsGame(int wygrana)
+{
+    if(wygrana==1) {
+        punktyGra+=10;
+        ui->label_game_status->setText("Dobra odpowiedz");
+        } else {
+        if(ktoryObrazekGra!=0) ui->label_game_status->setText("Zla odpowiedz");
+        }
+    ui->lineEdit_game_nazwa->setText(tytulGra);
+    ui->lineEdit_game_punkty->setText(QString::number(punktyGra)+"/"+QString::number(ileObrazkowGra*10));
+}
 
+void MainWindow::showGame()
+{
+    StereogramGenerator a;
+
+    imageOrg = new QImage(adresObrazkaGra.at(ktoryObrazekGra));
+    imageCpy = imageOrg;
+    //imageOrg->load(fileName);
+
+    //qDebug() << " 1 " << imageCpy->width() << " " << imageCpy->height();
+
+    a.setImage(imageCpy);
+
+    a.generate(1);
+
+    imageCpy = a.getImage();
+
+    scaledImage = imageCpy->scaled(ui->label_game->width(),ui->label_game->height(),Qt::KeepAspectRatio);
+    ui->label_game->setPixmap(QPixmap::fromImage(scaledImage,Qt::AutoColor));
+
+}
+
+void MainWindow::on_pushButton_game_Ok_clicked()
+{
+    int odpowiedz=0;
+    if(ui->lineEdit_game_haslo->text()==hasloObrazkaGra.at(ktoryObrazekGra)) odpowiedz=1;
+
+    statsGame(odpowiedz);
+    ktoryObrazekGra++;
+
+    if(ktoryObrazekGra<ileObrazkowGra){
+        showGame();
+
+        } else
+            {
+            endGame();
+
+            }
+
+}
+
+void MainWindow::endGame(){
+    ui->stackedWidget->setCurrentIndex(4);
+    ui->lcdNumber_end_punkty->display(punktyGra);
+
+}
+
+void MainWindow::on_pushButton_2_end_menu_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(0);
 }

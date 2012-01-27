@@ -1,4 +1,4 @@
 Pierwsza gra - tytul
 1
-obrazki/pi.jpg
+gry/obrazki/pi.jpg
 pi
