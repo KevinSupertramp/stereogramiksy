@@ -26,12 +26,11 @@ public:
     public slots:
 
     private:
+        QPixmap     *originalPixelmap;
         QImage      *imageOrg;
         QImage      *imageOrgCpy;
         QImage      *imageStereogram;
         QImage      *tmp;
-
-        bool        wczytano;
 };
 
 #endif // STEREOGRAMGENERATOR_H

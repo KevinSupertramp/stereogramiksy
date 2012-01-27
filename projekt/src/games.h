@@ -2,23 +2,14 @@
 #define GAMES_H
 #include <QStringList>
 #include <QStringListModel>
-#include <QObject>
-//#include<QtGui>
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
 
-class Games : public QObject
+
+class Games : public MainWindow
 {
-    Q_OBJECT
 public:
-    explicit Games(QObject *parent = 0);
-
-    void dziala();
-
-signals:
-    void setModelOfListView(QStringListModel *model);
-public slots:
-
-
-public:
+    Games();
     QStringList listaGier;
     QStringListModel *model;
 };

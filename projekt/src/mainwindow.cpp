@@ -15,8 +15,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->pushButton_Save->setDisabled(true);
 
     connect(&a,SIGNAL(setStatusBarLabel(QString)),this,SLOT(onStatusBarChanged(QString)));
-
-    connect(&games,SIGNAL(setModelOfListView(QStringListModel*)),this,SLOT(onListViewChanged(QStringListModel*)));
 }
 
 MainWindow::~MainWindow()
@@ -70,8 +68,6 @@ void MainWindow::update()
 
 bool MainWindow::wczytajPlik(QString fileName)
 {
-
-
 
 //    ui->statusBar->showMessage("Generowanie stereogramu");
 //    setStatusBar_message("Generowanie stereogramu | proszê czekaæ");
@@ -137,7 +133,7 @@ bool MainWindow::wczytajPlik(QString fileName)
 void MainWindow::setLabel_info(int w, int h, float size, bool allgray)
 {
     QString t;
-    t.append(QString("Wczytano obraz:\n"));
+    t.append("Wczytano obraz:\n");
     t.append(QString("  rozdzielczosc: ").toUtf8());
     t.append(QString("%1").arg(w));
     t.append("x");
@@ -213,7 +209,7 @@ void MainWindow::on_pushButton_Games_clicked()
     QStringListModel *model;
 
 
-    QFile file(":new/prefix1/lista.txt");
+    QFile file("gry/lista.txt");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {}
 
     QTextStream in(&file);
@@ -224,6 +220,7 @@ void MainWindow::on_pushButton_Games_clicked()
          }
      model = new QStringListModel(listaGier);
      ui->listView->setModel(model);
+     file.close();
 
 
 
@@ -247,8 +244,6 @@ void MainWindow::on_pushButton_wg_Menu_clicked()
 
 void MainWindow::loadGame(QString gra)
 {
-    games.dziala();
-
     ui->stackedWidget->setCurrentIndex(3);
     QFile file("gry/opisy/"+gra+".txt");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {}
@@ -265,6 +260,9 @@ void MainWindow::loadGame(QString gra)
     punktyGra=ktoryObrazekGra=0;
     statsGame(0);
     showGame();
+
+
+
 }
 
 void MainWindow::statsGame(int wygrana)
@@ -330,7 +328,92 @@ void MainWindow::on_pushButton_2_end_menu_clicked()
 }
 
 
-void MainWindow::onListViewChanged(QStringListModel *model)
+/* funkcje do scenariusza */
+
+void MainWindow::on_pushButton_Scenariusz_clicked()
 {
-    qDebug() << "onListViewChanged" << " dziala.";
+    ui->stackedWidget->setCurrentIndex(5);
+}
+
+void MainWindow::on_pushButton_scen_menu_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(0);
+}
+
+
+
+void MainWindow::on_pushButton_scen_add_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
+                                                     "",
+                                                     tr("Graphic files (*.jpg *.png *.bmp);;All files (*.*)"));
+
+     QStringListModel *model;
+     fileListScen.append(fileName);
+     model = new QStringListModel(fileListScen);
+     ui->listView_scen_file->setModel(model);
+
+}
+
+void MainWindow::on_pushButton_scen_dalej_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(6);
+    int ilefile = fileListScen.count();
+    int ilehaslo = haslaListScen.count();
+    ui->lineEdit_scen2_ile->setText(QString::number(ilefile-ilehaslo));
+    ui->pushButton_scen2_ok->setEnabled(false);
+}
+
+void MainWindow::on_pushButton_scen2_menu_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(0);
+}
+
+void MainWindow::on_pushButton_scen2_add_clicked()
+{
+    QStringListModel *model;
+    QString haslo = ui->lineEdit_scen2_haslo->text();
+    haslaListScen.append(haslo);
+    model = new QStringListModel(haslaListScen);
+    ui->listView_scen2_hasla->setModel(model);
+    int ilefile = fileListScen.count();
+    int ilehaslo = haslaListScen.count();
+    ui->lineEdit_scen2_ile->setText(QString::number(ilefile-ilehaslo));
+    if(ilefile-ilehaslo==0){
+        ui->pushButton_scen2_add->setEnabled(false);
+        ui->pushButton_scen2_ok->setEnabled(true);
+        }
+}
+
+void MainWindow::on_pushButton_scen2_ok_clicked()
+{
+    QFile file("gry/lista.txt");
+    if (!file.open(QIODevice::Append | QIODevice::Text)) {
+        qDebug() << "Blad otwarcia pliku lista.txt";
+        }
+
+    QTextStream out(&file);
+    QString tytul = ui->lineEdit_scen2_tytul->text();
+    out <<  tytul << endl;
+    file.close();
+
+    QFile file2( "gry/opisy/"+ui->lineEdit_scen2_tytul->text()+".txt" );
+    if(!file2.open(QIODevice::WriteOnly | QIODevice::Text)){ qDebug() << "Blad otwarcia pliku nowego"; }
+    QTextStream out2(&file2);
+    tytul=ui->lineEdit_scen2_tytul->text();
+    out2 << tytul << "\n";
+    int ilefile = fileListScen.count();
+    out2 << ilefile << "\n";
+    for(int i=0;i<ilefile;i++){
+        out2 << fileListScen.at(i) << "\n";
+        }
+    for(int i=0;i<ilefile;i++){
+        qDebug() << haslaListScen.at(i);
+        out2 << haslaListScen.at(i) << "\n";
+        }
+
+    file2.close();
+
+
+
 }
