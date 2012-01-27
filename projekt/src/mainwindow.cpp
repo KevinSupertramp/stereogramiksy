@@ -3,7 +3,6 @@
 #include "stereogramgenerator.h"
 #include "games.h"
 
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -69,7 +68,6 @@ void MainWindow::update()
 
 bool MainWindow::wczytajPlik(QString fileName)
 {
-    setLabel_progres("udalo sie");
 
 //    ui->statusBar->showMessage("Generowanie stereogramu");
 //    setStatusBar_message("Generowanie stereogramu | proszê czekaæ");
@@ -77,7 +75,7 @@ bool MainWindow::wczytajPlik(QString fileName)
     QImage tmp;
     qDebug() << "wczytajPlik" << fileName;
 
-    StereogramGenerator a;
+//    StereogramGenerator a;
 
     /* obsluga obrazkow gif */
     if(fileName.endsWith("gif")){
@@ -103,11 +101,18 @@ bool MainWindow::wczytajPlik(QString fileName)
 
     } else {
 
+    QFile file(fileName);
+
+
+
     imageOrg = new QImage(fileName);
     imageCpy = imageOrg;
     //imageOrg->load(fileName);
 
-    qDebug() << " 1 " << imageCpy->width() << " " << imageCpy->height();
+
+    setLabel_info(imageCpy->width(),imageCpy->height(),file.size(),imageCpy->allGray());
+
+    qDebug() << " wczytano obraz o rozdzielczoœci " << imageCpy->width() << "x" << imageCpy->height();
 
     a.setImage(imageCpy);
 
@@ -125,11 +130,24 @@ bool MainWindow::wczytajPlik(QString fileName)
     return true;
 }
 
-void MainWindow::setLabel_progres(QString tmp)
+void MainWindow::setLabel_info(int w, int h, float size, bool allgray)
 {
-    ui->label_3->clear();
-    ui->label_3->setText(tmp + " coœ ");
-    ui->label_3->adjustSize();
+    QString t;
+    t.append("Wczytano obraz:\n");
+    t.append(QString("  rozdzielczosc: ").toUtf8());
+    t.append(QString("%1").arg(w));
+    t.append("x");
+    t.append(QString("%1").arg(h));
+    t.append("\n");
+    t.append("  rozmiar pliku: ");
+    QString tmp; tmp.sprintf("%.2f",(size/1024)/1024);
+    t.append(tmp);
+    t.append(" MB\n");
+    t.append(QString("  skala szarosci: ").toUtf8());
+    t.append(QString("%1").arg(allgray));
+
+    ui->label_info->clear();
+    ui->label_info->setText(t.toUtf8());
 }
 
 void MainWindow::setStatusBar_message(QString tmp)
@@ -152,6 +170,21 @@ ui->stackedWidget->setSizeIncrement(ui->centralWidget->width(),ui->centralWidget
 }
 
 // --------------------
+
+void MainWindow::on_checkBox_clicked()
+{
+    if(ui->checkBox->checkState())
+    {
+        a.generate(1,1);
+        imageCpy = a.getImage();
+    }
+    else
+    {
+        a.generate(1,0);
+        imageCpy = a.getImage();
+    }
+    update();
+}
 
 void MainWindow::on_pushButton_Open_clicked()
 {
@@ -263,7 +296,6 @@ void MainWindow::showGame()
     ui->label_game->setPixmap(QPixmap::fromImage(scaledImage,Qt::AutoColor));
 
 }
-
 void MainWindow::on_pushButton_game_Ok_clicked()
 {
     int odpowiedz=0;
@@ -293,3 +325,4 @@ void MainWindow::on_pushButton_2_end_menu_clicked()
 {
     ui->stackedWidget->setCurrentIndex(0);
 }
+

@@ -4,9 +4,7 @@
 #include<iostream>
 #include<QtGui>
 
-#include "mainwindow.h"
-
-class StereogramGenerator : MainWindow
+class StereogramGenerator
 {
     public:
         StereogramGenerator();
@@ -15,8 +13,8 @@ class StereogramGenerator : MainWindow
         inline void setImage(QImage *img){imageOrg = img;}
         inline QImage* getImage(){return imageStereogram;}
 
-        void generate(int convex);
-        QImage drawRectOnImage(QPixmap &pix, int maxX, int maxY);
+        void generate(int convex, bool circles=false);
+        void drawCirclesOnImage(int maxX, int maxY);
 
         void CalculateImageDepth(QVector<QVector<double> > &imageDepth, int convex); //(between 0 and 1)
 
@@ -26,9 +24,6 @@ class StereogramGenerator : MainWindow
         QImage      *imageOrgCpy;
         QImage      *imageStereogram;
         QImage      *tmp;
-
-
-        // wywalilem
 };
 
 #endif // STEREOGRAMGENERATOR_H

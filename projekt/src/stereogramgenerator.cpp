@@ -25,14 +25,14 @@ StereogramGenerator::~StereogramGenerator()
                                                         /* Algorithm for drawing an autostereogram  */
 #define round(X) (int)((X)+0.5)                         /* Often need to round rather than truncate */
 #define DPI 96                                          /* Output device has 72 pixels per inch */
-#define eyeSeparation round(2.755*DPI)                                /* Eye separation is assumed to be 2.5 in */
-#define depthOfField (1/2.6)                           /* Depth of field (fraction of viewing distance) */
+#define eyeSeparation round(2.7*DPI)                                /* Eye separation is assumed to be 2.5 in */
+#define depthOfField (1/3.0)                           /* Depth of field (fraction of viewing distance) */
 #define separation(Z) round((1-depthOfField*Z)*eyeSeparation/(2-depthOfField*Z))        /* Stereo separation corresponding to position Z */
 #define far separation(0)                               /* ... and corresponding to far plane, Z=0 */
 //#define maxX 768                                        /* Image and object are both maxX by maxY pixels */
 //#define maxY 256
 
-void StereogramGenerator::generate(int convex)
+void StereogramGenerator::generate(int convex, bool circles)
 {
     if(imageOrg->height() >= 720)
         *imageOrg = imageOrg->scaledToHeight(720);
@@ -54,7 +54,7 @@ void StereogramGenerator::generate(int convex)
 
     CalculateImageDepth(imageDepth,convex);
 
-    MainWindow::setStatusBar_message("olaBOga");
+//    MainWindow::setStatusBar_message("olaBOga");
 
     for(int y=0;y<maxY;++y)
     {
@@ -125,23 +125,8 @@ void StereogramGenerator::generate(int convex)
         }
     }
 
-
-    QPainter p;
-    p.begin(imageStereogram);
-//    p.setPen(Qt::black);
-//    p.setFont(QFont("Arial", 30));
-//    p.drawText(rect(), Qt::AlignCenter, "Qtsdfsaadasd");
-    p.setBrush(QBrush(Qt::black));
-    p.setPen(Qt::black);
-    p.drawEllipse(maxX/2-far/2,maxY*16/19,30,30);
-    p.drawEllipse(maxX/2+far/2,maxY*16/19,30,30);
-    p.end();
-
-//    QPixmap *p = new QPixmap(imageStereogram->width(),imageStereogram->height());
-//            p->fromImage(*imageStereogram);
-
-//    QImage imag = drawRectOnImage(*p,imageStereogram->width(),imageStereogram->height());
-//    imageOrgCpy = &imag;
+    if(circles)
+        drawCirclesOnImage(maxX,maxY);
 }
 
 void StereogramGenerator::CalculateImageDepth(QVector<QVector<double> > &imageDepth, int convex)
@@ -169,16 +154,13 @@ void StereogramGenerator::CalculateImageDepth(QVector<QVector<double> > &imageDe
     // end o calculation
 }
 
-QImage StereogramGenerator::drawRectOnImage(QPixmap &pix, int maxX, int maxY)
+void StereogramGenerator::drawCirclesOnImage(int maxX, int maxY)
 {
     QPainter p;
-    p.begin(&pix);
+    p.begin(imageStereogram);
+    p.setBrush(QBrush(Qt::black));
     p.setPen(Qt::black);
-    p.drawEllipse(maxX/2 - eyeSeparation,maxY*19/20,30,30);
-    p.drawEllipse(maxX/2 + eyeSeparation,maxY*19/20,30,30);
+    p.drawEllipse(maxX/2-far/2,maxY*16/19,30,30);
+    p.drawEllipse(maxX/2+far/2,maxY*16/19,30,30);
     p.end();
-
-    return pix.toImage().copy();
-
-//    imageStereogram->fill(pix);
 }
