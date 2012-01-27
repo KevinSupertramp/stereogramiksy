@@ -110,7 +110,7 @@ bool MainWindow::wczytajPlik(QString fileName)
 
     a.setImage(imageCpy);
 
-    a.generate(0);
+    a.generate(1);
 
     imageCpy = a.getImage();
 

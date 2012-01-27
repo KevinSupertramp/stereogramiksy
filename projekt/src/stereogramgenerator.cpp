@@ -125,10 +125,19 @@ void StereogramGenerator::generate(int convex)
         }
     }
 
+
+    QPainter p;
+    p.begin(imageStereogram);
+    p.setPen(Qt::black);
+    p.drawRect(maxX/2-far/2,maxY*19/20,30,30);
+    p.drawRect(maxX/2+far/2,maxY*19/20,30,30);
+    p.end();
+
 //    QPixmap *p = new QPixmap(imageStereogram->width(),imageStereogram->height());
 //            p->fromImage(*imageStereogram);
 
-//    imageOrgCpy = &(drawRectOnImage(*originalPixelmap,maxX,maxY));
+//    QImage imag = drawRectOnImage(*p,imageStereogram->width(),imageStereogram->height());
+//    imageOrgCpy = &imag;
 }
 
 void StereogramGenerator::CalculateImageDepth(QVector<QVector<double> > &imageDepth, int convex)
@@ -165,7 +174,7 @@ QImage StereogramGenerator::drawRectOnImage(QPixmap &pix, int maxX, int maxY)
     p.drawEllipse(maxX/2+far/2,maxY*19/20,30,30);
     p.end();
 
-    return (pix.toImage());
+    return pix.toImage().copy();
 
 //    imageStereogram->fill(pix);
 }
