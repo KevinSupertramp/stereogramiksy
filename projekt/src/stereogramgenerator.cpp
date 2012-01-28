@@ -40,7 +40,7 @@ StereogramGenerator::~StereogramGenerator()
 //#define maxX 768                                        /* Image and object are both maxX by maxY pixels */
 //#define maxY 256
 
-void StereogramGenerator::generate(int convex, bool circles)
+void StereogramGenerator::generate(int convex, int color, bool circles)
 {
     if(imageOrg->height() >= 720)
         *imageOrg = imageOrg->scaledToHeight(720);
@@ -130,7 +130,66 @@ void StereogramGenerator::generate(int convex, bool circles)
             else pix[x] = pix[same[x]]; /* Constrained choice; obey constraint */
 
             //qDebug() << x << y << pix[x];
-            imageStereogram->setPixel(x, y, pix[x]*16775930);
+            switch (color)
+            {
+            case 0:
+                imageStereogram->setPixel(x, y, pix[x]*16775930); /* White */
+                break;
+            case 1:
+                imageStereogram->setPixel(x, y, pix[x]*14210000); /* Gray */
+                break;
+            case 2:
+                imageStereogram->setPixel(x, y, pix[x]*11500000); /* Purple */
+                break;
+            case 3:
+                imageStereogram->setPixel(x, y, pix[x]*11800000); /* Violet */
+                break;
+            case 4:
+                imageStereogram->setPixel(x, y, pix[x]*14245000); /* Pink */
+                break;
+            case 5:
+                imageStereogram->setPixel(x, y, pix[x]*14300000); /* Scarlet */
+                break;
+            case 6:
+                imageStereogram->setPixel(x, y, pix[x]*16000000); /* Red */
+                break;
+            case 7:
+                imageStereogram->setPixel(x, y, pix[x]*14250000); /* Orange */
+                break;
+            case 8:
+                imageStereogram->setPixel(x, y, pix[x]*9000000); /* Brown */
+                break;
+            case 9:
+                imageStereogram->setPixel(x, y, pix[x]*14272000); /* Yellow */
+                break;
+            case 10:
+                imageStereogram->setPixel(x, y, pix[x]*9300000); /* Pistachio */
+                break;
+            case 11:
+                imageStereogram->setPixel(x, y, pix[x]*125000); /* Green */
+                break;
+            case 12:
+                imageStereogram->setPixel(x, y, pix[x]*1830000); /* Sea green */
+                break;
+            case 13:
+                imageStereogram->setPixel(x, y, pix[x]*1900000); /* Sky blue */
+                break;
+            case 14:
+                imageStereogram->setPixel(x, y, pix[x]*300000); /* Indigo */
+                break;
+            case 15:
+                imageStereogram->setPixel(x, y, pix[x]*255); /* Blue */
+                break;
+            case 16:
+                imageStereogram->setPixel(x, y, pix[x]*16000000/imageOrg->width()*x); /* Multi-color columns */
+                break;
+            case 17:
+                imageStereogram->setPixel(x, y, pix[x]*16000000/imageOrg->height()*y); /* Multi-color rows */
+                break;
+            default:
+                imageStereogram->setPixel(x, y, pix[x]*16775930); /* White */
+                break;
+            }
         }
     }
 

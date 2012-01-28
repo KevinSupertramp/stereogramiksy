@@ -143,6 +143,100 @@
                    </property>
                   </widget>
                  </item>
+                 <item>
+                  <widget class="QComboBox" name="comboBox">
+                   <item>
+                    <property name="text">
+                     <string>Biały</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Szary</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Fioletowy</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Purpurowy</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Różowy</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Szkarłatny</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Czerwony</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Pomarańczowy</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Brązowy</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Żółty</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Pistacjowy</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Zielony</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Morski</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Błękitny</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Indigo</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Niebieski</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Wielokolorowy (w pionie)</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Wielokolorowy (w poziomie)</string>
+                    </property>
+                   </item>
+                  </widget>
+                 </item>
                 </layout>
                </widget>
               </item>
@@ -652,7 +746,7 @@
      <x>0</x>
      <y>0</y>
      <width>595</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
   </widget>

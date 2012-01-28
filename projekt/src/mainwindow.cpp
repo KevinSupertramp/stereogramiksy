@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->stackedWidget->setSizeIncrement(ui->centralWidget->width(),ui->centralWidget->height());
     ui->pushButton_Save->setDisabled(true);
     ui->checkBox->setDisabled(true);
+    ui->comboBox->setDisabled(true);
 
     connect(&a,SIGNAL(setStatusBarLabel(QString)),this,SLOT(onStatusBarChanged(QString)));
 }
@@ -44,6 +45,7 @@ void MainWindow::openFile() // dokoñczyæ openFile
            wczytano = wczytajPlik(fileName);
            ui->pushButton_Save->setDisabled(false);
            ui->checkBox->setDisabled(false);
+           ui->comboBox->setDisabled(false);
         }
     }
     catch(std::exception &e)
@@ -177,12 +179,12 @@ void MainWindow::on_checkBox_clicked()
 {
     if(ui->checkBox->checkState())
     {
-        a.generate(1,1);
+        a.generate(1,ui->comboBox->currentIndex(),1);
         imageCpy = a.getImage();
     }
     else
     {
-        a.generate(1,0);
+        a.generate(1,ui->comboBox->currentIndex(),0);
         imageCpy = a.getImage();
     }
     update();
@@ -418,4 +420,19 @@ void MainWindow::on_pushButton_scen2_ok_clicked()
 
 
 
+}
+
+void MainWindow::on_comboBox_activated(int index)
+{
+    if(ui->checkBox->checkState())
+    {
+        a.generate(1,index,1);
+        imageCpy = a.getImage();
+    }
+    else
+    {
+        a.generate(1,index,0);
+        imageCpy = a.getImage();
+    }
+    update();
 }

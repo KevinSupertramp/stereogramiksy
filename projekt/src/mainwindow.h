@@ -77,6 +77,8 @@ private slots:
 
     void on_pushButton_scen2_ok_clicked();
 
+    void on_comboBox_activated(int index);
+
 protected:
 //    Ui::MainWindow *ui;
 
