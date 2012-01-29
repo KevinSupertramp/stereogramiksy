@@ -50,6 +50,7 @@ void StereogramGenerator::generate(int convex, int color, bool circles)
     int maxX = imageOrg->width();
     int maxY = imageOrg->height();
 
+
     qDebug() << " 2 " << maxX << " " << maxY;
 
 //    originalPixelmap = new QPixmap(imageOrg->width(),imageOrg->height());
@@ -66,7 +67,7 @@ void StereogramGenerator::generate(int convex, int color, bool circles)
 
 //    MainWindow::setStatusBar_message("olaBOga");
 
-    emit setStatusBarLabel("Generowanie ...");
+    emit setStatusBarLabel("Generowanie");
 
     for(int y=0;y<maxY;++y)
     {
@@ -191,7 +192,11 @@ void StereogramGenerator::generate(int convex, int color, bool circles)
                 break;
             }
         }
+
+        emit setStatusBarLabel(QString("Generowanie ")+QString("%1").arg((y*100)/(maxY-1))+QString("%"));
     }
+
+    emit setStatusBarLabel(QString("Zakoñczono. | Wygenerowano obrazek: ").toLatin1()+QString("%1").arg(maxX)+QString("x")+QString("%1").arg(maxY));
 
     if(circles)
         drawCirclesOnImage(maxX,maxY);

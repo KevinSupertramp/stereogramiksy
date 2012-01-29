@@ -147,8 +147,16 @@ void MainWindow::setLabel_info(int w, int h, float size, bool allgray)
     QString tmp; tmp.sprintf("%.2f",(size/1024)/1024);
     t.append(tmp);
     t.append(" MB\n");
-    t.append(QString("  skala szarosci: ").toUtf8());
-    t.append(QString("%1").arg(allgray));
+    t.append(QString("  obrazek w skali szarosci: ").toUtf8());
+
+    switch (allgray)
+    {
+        case 1:
+            t.append(QString("tak"));
+            break;
+        default:
+            t.append(QString("nie"));
+    }
 
     ui->label_info->clear();
     ui->label_info->setText(t.toUtf8());
