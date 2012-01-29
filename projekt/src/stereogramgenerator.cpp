@@ -196,7 +196,7 @@ void StereogramGenerator::generate(int convex, int color, bool circles)
         emit setStatusBarLabel(QString("Generowanie ")+QString("%1").arg((y*100)/(maxY-1))+QString("%"));
     }
 
-    emit setStatusBarLabel(QString("Zakoñczono. | Wygenerowano obrazek: ").toLatin1()+QString("%1").arg(maxX)+QString("x")+QString("%1").arg(maxY));
+    emit setStatusBarLabel(QString("Zakoñczono. | Wygenerowano obrazek: ")+QString("%1").arg(maxX)+QString("x")+QString("%1").arg(maxY));
 
     if(circles)
         drawCirclesOnImage(maxX,maxY);

@@ -291,7 +291,7 @@ void MainWindow::statsGame(int wygrana)
 
 void MainWindow::showGame()
 {
-    StereogramGenerator a;
+//    StereogramGenerator a;
 
     imageOrg = new QImage(adresObrazkaGra.at(ktoryObrazekGra));
     imageCpy = imageOrg;
