@@ -14,15 +14,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->comboBox->setDisabled(true);
 
     connect(&_stereogramGenerator,SIGNAL(setStatusBarLabel(QString)),this,SLOT(onStatusBarChanged(QString)));
-
-    future = new QFuture<void>;
-    watcher = new QFutureWatcher<void>;
 }
 
 MainWindow::~MainWindow()
 {
-    delete watcher;
-    delete future;
     delete ui;
 }
 
@@ -70,18 +65,14 @@ void MainWindow::update()
     ui->label_game->setPixmap(QPixmap::fromImage(scaledImage,Qt::AutoColor));
 }
 
-void MainWindow::checkImageIfIsGray()
-{
-    if(wczytano)
-        allGray = imageCpy->allGray();
-}
-
 bool MainWindow::wczytajPlik(QString fileName)
 {
     QFile file(fileName);
 
     imageOrg = new QImage(fileName);
     imageCpy = imageOrg;
+
+    setLabel_info(imageCpy->width(),imageCpy->height(),file.size(),imageCpy->allGray());
 
     _stereogramGenerator.setImage(imageCpy);
     _stereogramGenerator.generate(1);
@@ -90,12 +81,6 @@ bool MainWindow::wczytajPlik(QString fileName)
 
     scaledImage = imageCpy->scaled(ui->label->width(),ui->label->height(),Qt::KeepAspectRatio);
     ui->label->setPixmap(QPixmap::fromImage(scaledImage,Qt::AutoColor));
-
-//    *future = QtConcurrent::run(checkImageIfIsGray);
-//    watcher->setFuture(*future);
-
-//    if(future->isFinished())
-        setLabel_info(imageCpy->width(),imageCpy->height(),file.size(),imageCpy->allGray());
 
     return true;
 }

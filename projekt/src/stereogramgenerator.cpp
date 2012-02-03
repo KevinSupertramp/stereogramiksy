@@ -11,7 +11,11 @@ StereogramGenerator::StereogramGenerator(QObject *parent) :
 
 StereogramGenerator::~StereogramGenerator()
 {
-
+    if(_wygenerowano)
+    {
+        delete _imageGeneratedStereogram;
+        //delete _imageToGenerate;
+    }
 }
 
 void StereogramGenerator::setDefault(int DPI, double distanceBetweenEyes)
