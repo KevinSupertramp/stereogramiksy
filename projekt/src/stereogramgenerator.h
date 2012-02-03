@@ -1,9 +1,10 @@
 #ifndef STEREOGRAMGENERATOR_H
 #define STEREOGRAMGENERATOR_H
 
-//#include<iostream>
-#include<QtGui>
-
+#include <QObject>
+#include <QImage>
+#include <QDebug>
+#include <QPainter>
 
 class StereogramGenerator : public QObject
 {

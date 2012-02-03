@@ -1,15 +1,15 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QtGui>
 #include <QMainWindow>
-#include <iostream>
-#include <exception>
+#include <QFileDialog>
+#include <QStringListModel>
 
 #include "stereogramgenerator.h"
 
-namespace Ui {
-class MainWindow;
+namespace Ui
+{
+    class MainWindow;
 }
 
 class MainWindow : public QMainWindow
@@ -19,8 +19,6 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-
-    StereogramGenerator a;
 
     void update();
     void openFile();
@@ -33,10 +31,7 @@ public:
     void showGame();
     void endGame();
 
-    void setLabel_info(int w, int h, float size, bool allgray);
-//    void setStatusBar_message(QString tmp);
-//    Ui::MainWindow *ui;
-    
+    void setLabel_info(int w, int h, float size, bool allgray);    
 private slots:
 
     void onStatusBarChanged(QString tmp);
@@ -57,10 +52,10 @@ private slots:
 
     void on_pushButton_wg_Menu_clicked();
 
-
     void on_pushButton_game_Ok_clicked();
 
     void on_pushButton_2_end_menu_clicked();
+
     void on_checkBox_clicked();
 
     void on_pushButton_Scenariusz_clicked();
@@ -87,7 +82,7 @@ protected:
     QImage scaledImage;
     bool wczytano;
 
-
+    StereogramGenerator _stereogramGenerator;
 
     /* do gry */
     QString tytulGra;

@@ -6,7 +6,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     wczytano = false;
-    //imageOrg = new QImage();
     ui->setupUi(this);
     ui->stackedWidget->setCurrentIndex(0);
     ui->stackedWidget->setSizeIncrement(ui->centralWidget->width(),ui->centralWidget->height());
@@ -14,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->checkBox->setDisabled(true);
     ui->comboBox->setDisabled(true);
 
-    connect(&a,SIGNAL(setStatusBarLabel(QString)),this,SLOT(onStatusBarChanged(QString)));
+    connect(&_stereogramGenerator,SIGNAL(setStatusBarLabel(QString)),this,SLOT(onStatusBarChanged(QString)));
 }
 
 MainWindow::~MainWindow()
@@ -22,13 +21,12 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-
 void MainWindow::on_pushButton_Generate_clicked()
 {
     ui->stackedWidget->setCurrentIndex(1);
 }
 
-void MainWindow::openFile() // dokoñczyæ openFile
+void MainWindow::openFile()
 {
     if(wczytano)
         delete imageOrg;
@@ -57,7 +55,6 @@ void MainWindow::saveFile()
 {
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save as image..."), QDir::homePath(), tr("PNG Image Files (*.png)"));
     imageCpy->save(fileName, "PNG");
-
 }
 
 void MainWindow::update()
@@ -70,14 +67,6 @@ void MainWindow::update()
 
 bool MainWindow::wczytajPlik(QString fileName)
 {
-
-//    ui->statusBar->showMessage("Generowanie stereogramu");
-//    setStatusBar_message("Generowanie stereogramu | proszê czekaæ");
-
-    QImage tmp;
-
-    qDebug() << "wczytajPlik" << fileName;
-
     QFile file(fileName);
 
     imageOrg = new QImage(fileName);
@@ -85,13 +74,10 @@ bool MainWindow::wczytajPlik(QString fileName)
 
     setLabel_info(imageCpy->width(),imageCpy->height(),file.size(),imageCpy->allGray());
 
-//    qDebug() << " wczytano obraz o rozdzielczoœci " << imageCpy->width() << "x" << imageCpy->height();
+    _stereogramGenerator.setImage(imageCpy);
+    _stereogramGenerator.generate(1);
 
-    a.setImage(imageCpy);
-
-    a.generate(1);
-
-    imageCpy = a.getImage();
+    imageCpy = _stereogramGenerator.getImage();
 
     scaledImage = imageCpy->scaled(ui->label->width(),ui->label->height(),Qt::KeepAspectRatio);
     ui->label->setPixmap(QPixmap::fromImage(scaledImage,Qt::AutoColor));
@@ -129,7 +115,6 @@ void MainWindow::setLabel_info(int w, int h, float size, bool allgray)
 
 void MainWindow::onStatusBarChanged(QString tmp)
 {
-//    qDebug() << "setStatusBar_message" << tmp;
     ui->statusBar->showMessage(tmp);
 }
 
@@ -152,13 +137,13 @@ void MainWindow::on_checkBox_clicked()
 {
     if(ui->checkBox->checkState())
     {
-        a.generate(1,ui->comboBox->currentIndex(),1);
-        imageCpy = a.getImage();
+        _stereogramGenerator.generate(1,ui->comboBox->currentIndex(),1);
+        imageCpy = _stereogramGenerator.getImage();
     }
     else
     {
-        a.generate(1,ui->comboBox->currentIndex(),0);
-        imageCpy = a.getImage();
+        _stereogramGenerator.generate(1,ui->comboBox->currentIndex(),0);
+        imageCpy = _stereogramGenerator.getImage();
     }
     update();
 }
@@ -181,7 +166,6 @@ void MainWindow::on_pushButton_clicked()
 void MainWindow::on_pushButton_Games_clicked()
 {
     ui->stackedWidget->setCurrentIndex(2);
-    //Games *game = new Games();
     QStringList listaGier;
     QStringListModel *model;
 
@@ -198,9 +182,6 @@ void MainWindow::on_pushButton_Games_clicked()
      model = new QStringListModel(listaGier);
      ui->listView->setModel(model);
      file.close();
-
-
-
 }
 
 void MainWindow::on_pushButton_Save_clicked()
@@ -237,9 +218,6 @@ void MainWindow::loadGame(QString gra)
     punktyGra=ktoryObrazekGra=0;
     statsGame(0);
     showGame();
-
-
-
 }
 
 void MainWindow::statsGame(int wygrana)
@@ -256,7 +234,7 @@ void MainWindow::statsGame(int wygrana)
 
 void MainWindow::showGame()
 {
-//    StereogramGenerator a;
+//    StereogramGenerator _stereogramGenerator;
 
     imageOrg = new QImage(adresObrazkaGra.at(ktoryObrazekGra));
     imageCpy = imageOrg;
@@ -264,15 +242,14 @@ void MainWindow::showGame()
 
     //qDebug() << " 1 " << imageCpy->width() << " " << imageCpy->height();
 
-    a.setImage(imageCpy);
+    _stereogramGenerator.setImage(imageCpy);
 
-    a.generate(1);
+    _stereogramGenerator.generate(1);
 
-    imageCpy = a.getImage();
+    imageCpy = _stereogramGenerator.getImage();
 
     scaledImage = imageCpy->scaled(ui->label_game->width(),ui->label_game->height(),Qt::KeepAspectRatio);
     ui->label_game->setPixmap(QPixmap::fromImage(scaledImage,Qt::AutoColor));
-
 }
 void MainWindow::on_pushButton_game_Ok_clicked()
 {
@@ -290,7 +267,6 @@ void MainWindow::on_pushButton_game_Ok_clicked()
             endGame();
 
             }
-
 }
 
 void MainWindow::endGame(){
@@ -329,7 +305,6 @@ void MainWindow::on_pushButton_scen_add_clicked()
      fileListScen.append(fileName);
      model = new QStringListModel(fileListScen);
      ui->listView_scen_file->setModel(model);
-
 }
 
 void MainWindow::on_pushButton_scen_dalej_clicked()
@@ -390,22 +365,19 @@ void MainWindow::on_pushButton_scen2_ok_clicked()
         }
 
     file2.close();
-
-
-
 }
 
 void MainWindow::on_comboBox_activated(int index)
 {
     if(ui->checkBox->checkState())
     {
-        a.generate(1,index,1);
-        imageCpy = a.getImage();
+        _stereogramGenerator.generate(1,index,1);
+        imageCpy = _stereogramGenerator.getImage();
     }
     else
     {
-        a.generate(1,index,0);
-        imageCpy = a.getImage();
+        _stereogramGenerator.generate(1,index,0);
+        imageCpy = _stereogramGenerator.getImage();
     }
     update();
 }

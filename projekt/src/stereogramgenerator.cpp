@@ -31,7 +31,7 @@ int StereogramGenerator::roundSomething(double something)
 
 int StereogramGenerator::separateSomething(double something)
 {
-    return round((1-_depthOfField*something)*_eyeSeparation/(2-_depthOfField*something));
+    return roundSomething((1-_depthOfField*something)*_eyeSeparation/(2-_depthOfField*something));
 }
 
                                                         /* Algorithm for drawing an autostereogram  */
