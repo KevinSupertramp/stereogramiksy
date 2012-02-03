@@ -278,7 +278,7 @@
                 <item>
                  <layout class="QVBoxLayout" name="verticalLayout_11">
                   <item>
-                   <widget class="QLabel" name="label_10">
+                   <widget class="QLabel" name="label_DPI">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                       <horstretch>0</horstretch>
@@ -295,14 +295,14 @@ p, li { white-space: pre-wrap; }
                    </widget>
                   </item>
                   <item>
-                   <widget class="QComboBox" name="comboBox_2"/>
+                   <widget class="QComboBox" name="comboBox_DPI"/>
                   </item>
                  </layout>
                 </item>
                 <item>
                  <layout class="QVBoxLayout" name="verticalLayout_12">
                   <item>
-                   <widget class="QLabel" name="label_11">
+                   <widget class="QLabel" name="label_RozstawOczu">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                       <horstretch>0</horstretch>
@@ -319,7 +319,7 @@ p, li { white-space: pre-wrap; }
                    </widget>
                   </item>
                   <item>
-                   <widget class="QComboBox" name="comboBox_3"/>
+                   <widget class="QComboBox" name="comboBox_RozstawOczu"/>
                   </item>
                  </layout>
                 </item>
@@ -367,7 +367,7 @@ p, li { white-space: pre-wrap; }
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLabel" name="label_12">
+                 <widget class="QLabel" name="label_rozdzielczosc">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -380,7 +380,7 @@ p, li { white-space: pre-wrap; }
                  </widget>
                 </item>
                 <item>
-                 <widget class="QComboBox" name="comboBox_4"/>
+                 <widget class="QComboBox" name="comboBox_rozdzielczosc"/>
                 </item>
                </layout>
               </item>
