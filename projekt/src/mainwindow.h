@@ -5,6 +5,11 @@
 #include <QFileDialog>
 #include <QStringListModel>
 
+#include <QThread>
+#include <QtConcurrentRun>
+#include <QFuture>
+#include <QFutureWatcher>
+
 #include "stereogramgenerator.h"
 
 namespace Ui
@@ -74,15 +79,21 @@ private slots:
 
     void on_comboBox_activated(int index);
 
-protected:
+private:
+    void checkImageIfIsGray();
+
     Ui::MainWindow *ui;
 
     QString *fileName;
     QImage *imageOrg, *imageCpy;
     QImage scaledImage;
+    bool allGray;
     bool wczytano;
 
     StereogramGenerator _stereogramGenerator;
+
+    QFuture<void> *future;
+    QFutureWatcher<void> *watcher;
 
     /* do gry */
     QString tytulGra;

@@ -57,7 +57,8 @@ void StereogramGenerator::generate(int convex, int color, bool circles)
 
     _imageGeneratedStereogram = new QImage(_widthOfImage_X,_heightOfImage_Y,QImage::Format_RGB32);
 
-    double **imageDepth = new double*[_widthOfImage_X];
+    double **imageDepth = 0;
+    imageDepth = new double*[_widthOfImage_X];
     for(int i=0;i<_widthOfImage_X;++i)
         imageDepth[i] = new double[_heightOfImage_Y];
 
@@ -197,7 +198,7 @@ void StereogramGenerator::generate(int convex, int color, bool circles)
         drawCirclesOnImage(_widthOfImage_X,_heightOfImage_Y);
 
     // czyszczenie pamiêci
-    for(int i=0;i<_heightOfImage_Y;++i)
+    for(int i=0;i<_widthOfImage_X;++i)
         delete [] imageDepth[i];
     delete [] imageDepth;
 
