@@ -77,46 +77,17 @@ bool MainWindow::wczytajPlik(QString fileName)
 //    setStatusBar_message("Generowanie stereogramu | proszê czekaæ");
 
     QImage tmp;
+
     qDebug() << "wczytajPlik" << fileName;
-
-//    StereogramGenerator a;
-
-    /* obsluga obrazkow gif */
-    if(fileName.endsWith("gif")){
-        int iloscKlatek,i;
-        QMovie *movie = new QMovie(fileName);
-        movie->jumpToFrame(0);
-        iloscKlatek = movie->frameCount();
-        for(i=0;i<=iloscKlatek;i++){
-
-            imageOrg = new QImage(movie->currentImage());
-            //imageOrg = new QImage(tmp);
-            qDebug() << "Numer petli" << i;
-            imageCpy=imageOrg;
-            a.setImage(imageCpy);
-            a.generate(1);
-            scaledImage = imageCpy->scaled(ui->label->width(),ui->label->height(),Qt::KeepAspectRatio);
-            ui->label->setPixmap(QPixmap::fromImage(scaledImage,Qt::AutoColor));
-            movie->jumpToFrame(i);
-
-
-            //if(i==iloscKlatek){ i=0; movie->jumpToFrame(0);}
-        }
-
-    } else {
 
     QFile file(fileName);
 
-
-
     imageOrg = new QImage(fileName);
     imageCpy = imageOrg;
-    //imageOrg->load(fileName);
-
 
     setLabel_info(imageCpy->width(),imageCpy->height(),file.size(),imageCpy->allGray());
 
-    qDebug() << " wczytano obraz o rozdzielczoœci " << imageCpy->width() << "x" << imageCpy->height();
+//    qDebug() << " wczytano obraz o rozdzielczoœci " << imageCpy->width() << "x" << imageCpy->height();
 
     a.setImage(imageCpy);
 
@@ -126,10 +97,6 @@ bool MainWindow::wczytajPlik(QString fileName)
 
     scaledImage = imageCpy->scaled(ui->label->width(),ui->label->height(),Qt::KeepAspectRatio);
     ui->label->setPixmap(QPixmap::fromImage(scaledImage,Qt::AutoColor));
-    }
-    //delete imageCpy;
-
-    qDebug() << ui->statusBar->currentMessage();
 
     return true;
 }
@@ -164,7 +131,7 @@ void MainWindow::setLabel_info(int w, int h, float size, bool allgray)
 
 void MainWindow::onStatusBarChanged(QString tmp)
 {
-    qDebug() << "setStatusBar_message" << tmp;
+//    qDebug() << "setStatusBar_message" << tmp;
     ui->statusBar->showMessage(tmp);
 }
 

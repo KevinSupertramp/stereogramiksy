@@ -1,36 +1,47 @@
 #ifndef STEREOGRAMGENERATOR_H
 #define STEREOGRAMGENERATOR_H
 
-#include<iostream>
+//#include<iostream>
 #include<QtGui>
+
 
 class StereogramGenerator : public QObject
 {
     Q_OBJECT
 public:
-        explicit StereogramGenerator(QObject *parent = 0);
+        explicit    StereogramGenerator(QObject *parent = 0);
+                    ~StereogramGenerator();
 
-//        StereogramGenerator();
-        ~StereogramGenerator();
+        inline      void setImage(QImage *img){_imageToGenerate = img;}
+        inline      QImage* getImage(){return _imageGeneratedStereogram;}
 
-        inline void setImage(QImage *img){imageOrg = img;}
-        inline QImage* getImage(){return imageStereogram;}
-
-        void generate(int convex, int color=false, bool circles=false);
-        void drawCirclesOnImage(int maxX, int maxY);
-
-        void CalculateImageDepth(QVector<QVector<double> > &imageDepth, int convex); //(between 0 and 1)
+        void        generate(int convex, int color=false, bool circles=false);
+        void        setDefault(int DPI, double distanceBetweenEyes);
 
     signals:
-        void setStatusBarLabel(QString tmp);
+        void        setStatusBarLabel(QString tmp);
     public slots:
+        // empty
 
     private:
-//        QPixmap     *originalPixelmap;
-        QImage      *imageOrg;
-//        QImage      *imageOrgCpy;
-        QImage      *imageStereogram;
-//        QImage      *tmp;
+        void        drawCirclesOnImage(int maxX, int maxY);
+        void        calculateImageDepth(double **imageDepth, int convex);
+
+        int         roundSomething(double something);
+        int         separateSomething(double something);
+
+        QImage      *_imageToGenerate;
+        QImage      *_imageGeneratedStereogram;
+        int         _widthOfImage_X;
+        int         _heightOfImage_Y;
+
+        bool        _wygenerowano;
+
+        double      _distanceBetweenEyes;
+        double      _DPI;
+        double      _depthOfField;
+        int         _eyeSeparation;
+        int         _farOfDots;
 };
 
 #endif // STEREOGRAMGENERATOR_H

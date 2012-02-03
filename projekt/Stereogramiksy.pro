@@ -21,5 +21,4 @@ HEADERS  += src/mainwindow.h \
 
 FORMS    += src/mainwindow.ui
 
-RESOURCES += \
-    zasoby/listaGier.qrc
+RESOURCES +=

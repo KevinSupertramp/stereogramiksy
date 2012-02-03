@@ -281,10 +281,31 @@
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton_Open">
-                <property name="text">
-                 <string>Wybierz plik</string>
+               <widget class="QWidget" name="widget_zapiszPlik" native="true">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
                 </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>50</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_10">
+                 <item>
+                  <widget class="QPushButton" name="pushButton_Open">
+                   <property name="text">
+                    <string>Wybierz plik</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QComboBox" name="comboBox_2"/>
+                 </item>
+                </layout>
                </widget>
               </item>
               <item>
@@ -746,7 +767,7 @@
      <x>0</x>
      <y>0</y>
      <width>595</width>
-     <height>20</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

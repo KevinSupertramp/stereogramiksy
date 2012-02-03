@@ -1,93 +1,89 @@
 #include "stereogramgenerator.h"
 
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
-
-#include <iostream>
-#include <cstdlib>
-
 StereogramGenerator::StereogramGenerator(QObject *parent) :
     QObject(parent)
 {
     // uzywac
     qDebug() << "Konstruktor klasy: SteogramGenerator()";
+    setDefault(96,2.7);
 }
 
-
-//StereogramGenerator::StereogramGenerator()
-//{
-//    // inicjalizacja zmiennych
-//    //imageOrg.fill(0);
-//    //imageStereogram.fill(0);
-
-//    qDebug() << "Konstruktor klasy: SteogramGenerator()";
-//}
 
 StereogramGenerator::~StereogramGenerator()
 {
-//    delete originalPixelmap;
+
 }
 
+void StereogramGenerator::setDefault(int DPI, double distanceBetweenEyes)
+{
+    _DPI                    = DPI;
+    _distanceBetweenEyes    = distanceBetweenEyes; // odleglosc obiektow
+    _eyeSeparation          = roundSomething(_distanceBetweenEyes*DPI);
+    _depthOfField           = (1.0/3.0);
+    _farOfDots              = separateSomething(0);
+    _wygenerowano           = false;
+}
 
+int StereogramGenerator::roundSomething(double something)
+{
+    return ((int)((something)+0.5));
+}
+
+int StereogramGenerator::separateSomething(double something)
+{
+    return round((1-_depthOfField*something)*_eyeSeparation/(2-_depthOfField*something));
+}
 
                                                         /* Algorithm for drawing an autostereogram  */
-#define round(X) (int)((X)+0.5)                         /* Often need to round rather than truncate */
-#define DPI 96                                          /* Output device has 72 pixels per inch */
-#define eyeSeparation round(2.7*DPI)                                /* Eye separation is assumed to be 2.5 in */
-#define depthOfField (1/3.0)                           /* Depth of field (fraction of viewing distance) */
-#define separation(Z) round((1-depthOfField*Z)*eyeSeparation/(2-depthOfField*Z))        /* Stereo separation corresponding to position Z */
-#define far separation(0)                               /* ... and corresponding to far plane, Z=0 */
-//#define maxX 768                                        /* Image and object are both maxX by maxY pixels */
-//#define maxY 256
+//#define round(X) (int)((X)+0.5)                         /* Often need to round rather than truncate */
+//#define DPI 96                                          /* Output device has 72 pixels per inch */
+//#define _eyeSeparation round(2.7*DPI)                                /* Eye separation is assumed to be 2.5 in */
+//#define _depthOfField (1/3.0)                           /* Depth of field (fraction of viewing distance) */
+//#define separation(Z) round((1-_depthOfField*Z)*_eyeSeparation/(2-_depthOfField*Z))        /* Stereo separation corresponding to position Z */
+//#define _farOfDots separation(0)                               /* ... and corresponding to _farOfDots plane, Z=0 */
 
 void StereogramGenerator::generate(int convex, int color, bool circles)
 {
-    if(imageOrg->height() >= 720)
-        *imageOrg = imageOrg->scaledToHeight(720);
-    else if(imageOrg->width()>= 1280)
-        *imageOrg = imageOrg->scaledToWidth(1280);
+    if(_wygenerowano)
+        delete _imageGeneratedStereogram;
 
-    int maxX = imageOrg->width();
-    int maxY = imageOrg->height();
+    if(_imageToGenerate->height() >= 720)
+        *_imageToGenerate = _imageToGenerate->scaledToHeight(720);
+    else if(_imageToGenerate->width()>= 1280)
+        *_imageToGenerate = _imageToGenerate->scaledToWidth(1280);
 
+    _widthOfImage_X = _imageToGenerate->width();
+    _heightOfImage_Y = _imageToGenerate->height();
 
-    qDebug() << " 2 " << maxX << " " << maxY;
+    _imageGeneratedStereogram = new QImage(_widthOfImage_X,_heightOfImage_Y,QImage::Format_RGB32);
 
-//    originalPixelmap = new QPixmap(imageOrg->width(),imageOrg->height());
-//    originalPixelmap->fromImage(*imageOrg);
+    double **imageDepth = new double*[_widthOfImage_X];
+    for(int i=0;i<_widthOfImage_X;++i)
+        imageDepth[i] = new double[_heightOfImage_Y];
 
-    imageStereogram = new QImage(maxX,maxY,QImage::Format_RGB32);
-//    imageOrgCpy = new QImage(maxX,maxY,QImage::Format_RGB32);
-
-     QVector<QVector<double> > imageDepth;
-
-//     double imageDepth[maxX*maxY];
-
-    CalculateImageDepth(imageDepth,convex);
-
-//    MainWindow::setStatusBar_message("olaBOga");
+    calculateImageDepth(imageDepth,convex);
 
     emit setStatusBarLabel("Generowanie");
 
-    for(int y=0;y<maxY;++y)
+    for(int y=0;y<_heightOfImage_Y;++y)
     {
-        unsigned int pix[maxX];
-        int same[maxY];
+        unsigned int pix[_widthOfImage_X];
+        int same[_heightOfImage_Y];
 
         int s;
         int left, right;
 
-        for(int x=0;x<maxX;++x)
+        for(int x=0;x<_widthOfImage_X;++x)
             same[x]=x;
 
-        for(int x=0;x<maxX;++x)
+        for(int x=0;x<_widthOfImage_X;++x)
         {
-             s = separation(imageDepth.at(x).at(y));
+            s = separateSomething(imageDepth[x][y]);
 
             left = x - s/2;
             right = left + s;
 
-            if(0 <= left && right < maxX)
+            if(0 <= left && right < _widthOfImage_X)
             {
                 int visible;                                        /* First, perform hidden-surface removal */
                 int t=1;                                            /* We will check the points (x-t,y) and (x+t,y) */
@@ -96,8 +92,8 @@ void StereogramGenerator::generate(int convex, int color, bool circles)
                 do
                 {
                                                                                             /* False if obscured */
-                    zt = imageDepth.at(x).at(y) + 2*(2 - depthOfField*imageDepth.at(x).at(y))*t/(depthOfField*eyeSeparation);
-                    visible = imageDepth.at(x-t).at(y) < zt && imageDepth.at(x+t).at(y) < zt;             /* False if obscured */
+                    zt = imageDepth[x][y] + 2*(2 - _depthOfField*imageDepth[x][y])*t/(_depthOfField*_eyeSeparation);
+                    visible = imageDepth[x-t][y] < zt && imageDepth[x+t][y] < zt;             /* False if obscured */
 
                     t++;
                 }
@@ -125,113 +121,113 @@ void StereogramGenerator::generate(int convex, int color, bool circles)
             }
         }
 
-        for (int x=maxX-1 ; x>= 0 ; x--)
+        for (int x=_widthOfImage_X-1 ; x>= 0 ; x--)
         {                                   /*  Now set the pixels on this scan line */
             if (same[x] == x) pix[x] = qrand()&1;/* Free choice; do it randomly */
             else pix[x] = pix[same[x]]; /* Constrained choice; obey constraint */
 
-            //qDebug() << x << y << pix[x];
             switch (color)
             {
             case 0:
-                imageStereogram->setPixel(x, y, pix[x]*16775930); /* White */
+                _imageGeneratedStereogram->setPixel(x, y, pix[x]*16775930); /* White */
                 break;
             case 1:
-                imageStereogram->setPixel(x, y, pix[x]*14210000); /* Gray */
+                _imageGeneratedStereogram->setPixel(x, y, pix[x]*14210000); /* Gray */
                 break;
             case 2:
-                imageStereogram->setPixel(x, y, pix[x]*11500000); /* Purple */
+                _imageGeneratedStereogram->setPixel(x, y, pix[x]*11500000); /* Purple */
                 break;
             case 3:
-                imageStereogram->setPixel(x, y, pix[x]*11800000); /* Violet */
+                _imageGeneratedStereogram->setPixel(x, y, pix[x]*11800000); /* Violet */
                 break;
             case 4:
-                imageStereogram->setPixel(x, y, pix[x]*14245000); /* Pink */
+                _imageGeneratedStereogram->setPixel(x, y, pix[x]*14245000); /* Pink */
                 break;
             case 5:
-                imageStereogram->setPixel(x, y, pix[x]*14300000); /* Scarlet */
+                _imageGeneratedStereogram->setPixel(x, y, pix[x]*14300000); /* Scarlet */
                 break;
             case 6:
-                imageStereogram->setPixel(x, y, pix[x]*16000000); /* Red */
+                _imageGeneratedStereogram->setPixel(x, y, pix[x]*16000000); /* Red */
                 break;
             case 7:
-                imageStereogram->setPixel(x, y, pix[x]*14250000); /* Orange */
+                _imageGeneratedStereogram->setPixel(x, y, pix[x]*14250000); /* Orange */
                 break;
             case 8:
-                imageStereogram->setPixel(x, y, pix[x]*9000000); /* Brown */
+                _imageGeneratedStereogram->setPixel(x, y, pix[x]*9000000); /* Brown */
                 break;
             case 9:
-                imageStereogram->setPixel(x, y, pix[x]*14272000); /* Yellow */
+                _imageGeneratedStereogram->setPixel(x, y, pix[x]*14272000); /* Yellow */
                 break;
             case 10:
-                imageStereogram->setPixel(x, y, pix[x]*9300000); /* Pistachio */
+                _imageGeneratedStereogram->setPixel(x, y, pix[x]*9300000); /* Pistachio */
                 break;
             case 11:
-                imageStereogram->setPixel(x, y, pix[x]*125000); /* Green */
+                _imageGeneratedStereogram->setPixel(x, y, pix[x]*125000); /* Green */
                 break;
             case 12:
-                imageStereogram->setPixel(x, y, pix[x]*1830000); /* Sea green */
+                _imageGeneratedStereogram->setPixel(x, y, pix[x]*1830000); /* Sea green */
                 break;
             case 13:
-                imageStereogram->setPixel(x, y, pix[x]*1900000); /* Sky blue */
+                _imageGeneratedStereogram->setPixel(x, y, pix[x]*1900000); /* Sky blue */
                 break;
             case 14:
-                imageStereogram->setPixel(x, y, pix[x]*300000); /* Indigo */
+                _imageGeneratedStereogram->setPixel(x, y, pix[x]*300000); /* Indigo */
                 break;
             case 15:
-                imageStereogram->setPixel(x, y, pix[x]*255); /* Blue */
+                _imageGeneratedStereogram->setPixel(x, y, pix[x]*255); /* Blue */
                 break;
             case 16:
-                imageStereogram->setPixel(x, y, pix[x]*16000000/imageOrg->width()*x); /* Multi-color columns */
+                _imageGeneratedStereogram->setPixel(x, y, pix[x]*16000000/_imageToGenerate->width()*x); /* Multi-color columns */
                 break;
             case 17:
-                imageStereogram->setPixel(x, y, pix[x]*16000000/imageOrg->height()*y); /* Multi-color rows */
+                _imageGeneratedStereogram->setPixel(x, y, pix[x]*16000000/_imageToGenerate->height()*y); /* Multi-color rows */
                 break;
             default:
-                imageStereogram->setPixel(x, y, pix[x]*16775930); /* White */
+                _imageGeneratedStereogram->setPixel(x, y, pix[x]*16775930); /* White */
                 break;
             }
         }
 
-        emit setStatusBarLabel(QString("Generowanie ")+QString("%1").arg((y*100)/(maxY-1))+QString("%"));
+        emit setStatusBarLabel(QString("Generowanie: ")+QString("%1").arg((y*100)/(_heightOfImage_Y-1))+QString("%"));
     }
 
-    emit setStatusBarLabel(QString("Zakoñczono. | Wygenerowano obrazek: ")+QString("%1").arg(maxX)+QString("x")+QString("%1").arg(maxY));
+    emit setStatusBarLabel(QString("Generowanie: 100% | Wygenerowano obrazek: ")+QString("%1").arg(_widthOfImage_X)+QString("x")+QString("%1").arg(_heightOfImage_Y));
 
     if(circles)
-        drawCirclesOnImage(maxX,maxY);
+        drawCirclesOnImage(_widthOfImage_X,_heightOfImage_Y);
+
+    // czyszczenie pamiêci
+    for(int i=0;i<_heightOfImage_Y;++i)
+        delete [] imageDepth[i];
+    delete [] imageDepth;
+
+    _wygenerowano = true;
 }
 
-void StereogramGenerator::CalculateImageDepth(QVector<QVector<double> > &imageDepth, int convex)
+void StereogramGenerator::calculateImageDepth(double **imageDepth, int convex)
 {
-    int tmp;
+    float tmp;
     if(convex == 1)
-        tmp = 1;
+        tmp = 1.0;
     else
-        tmp=-1;
+        tmp=-1.0;
 
-    // calculate depth
-    for(int x=0;x<imageOrg->width();++x)
+    for(int x=0;x<_imageToGenerate->width();++x)
     {
-        QVector<double> vtmp;
-        vtmp.clear();
-        for(int y=0;y<imageOrg->height();++y)
+        for(int y=0;y<_imageToGenerate->height();++y)
         {
-            vtmp.append((float)(convex - (qGray(imageOrg->pixel(x,y))/255.0)*tmp));
-            //qDebug() << x << y << Z[x][y];
+            imageDepth[x][y] = ((double)(convex - (qGray(_imageToGenerate->pixel(x,y))/255.0)*tmp));
         }
-        imageDepth.append(vtmp);
     }
-    // end o calculation
 }
 
-void StereogramGenerator::drawCirclesOnImage(int maxX, int maxY)
+void StereogramGenerator::drawCirclesOnImage(int _widthOfImage_X, int _heightOfImage_Y)
 {
     QPainter p;
-    p.begin(imageStereogram);
+    p.begin(_imageGeneratedStereogram);
     p.setBrush(QBrush(Qt::black));
     p.setPen(Qt::black);
-    p.drawEllipse(maxX/2-far/2,maxY*16/19,20,20);
-    p.drawEllipse(maxX/2+far/2,maxY*16/19,20,20);
+    p.drawEllipse(_widthOfImage_X/2-_farOfDots/2,_heightOfImage_Y*16/19,20,20);
+    p.drawEllipse(_widthOfImage_X/2+_farOfDots/2,_heightOfImage_Y*16/19,20,20);
     p.end();
 }
