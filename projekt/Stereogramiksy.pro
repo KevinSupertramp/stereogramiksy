@@ -12,12 +12,10 @@ TEMPLATE = app
 
 SOURCES += 	src/main.cpp\
 			src/mainwindow.cpp \
-			src/stereogramgenerator.cpp \
-			src/games.cpp
+			src/stereogramgenerator.cpp
 
 HEADERS  += src/mainwindow.h \
-			src/stereogramgenerator.h \
-			src/games.h
+			src/stereogramgenerator.h
 
 FORMS    += src/mainwindow.ui
 

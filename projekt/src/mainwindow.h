@@ -35,7 +35,7 @@ public:
 
     void setLabel_info(int w, int h, float size, bool allgray);
 //    void setStatusBar_message(QString tmp);
-    Ui::MainWindow *ui;
+//    Ui::MainWindow *ui;
     
 private slots:
 
@@ -80,7 +80,7 @@ private slots:
     void on_comboBox_activated(int index);
 
 protected:
-//    Ui::MainWindow *ui;
+    Ui::MainWindow *ui;
 
     QString *fileName;
     QImage *imageOrg, *imageCpy;
