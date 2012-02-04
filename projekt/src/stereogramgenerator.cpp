@@ -22,10 +22,49 @@ void StereogramGenerator::setDefault(int DPI, double distanceBetweenEyes)
 {
     _DPI                    = DPI;
     _distanceBetweenEyes    = distanceBetweenEyes; // odleglosc obiektow
-    _eyeSeparation          = roundSomething(_distanceBetweenEyes*DPI);
+    _eyeSeparation          = roundSomething(_distanceBetweenEyes*_DPI);
     _depthOfField           = (1.0/3.0);
     _farOfDots              = separateSomething(0);
     _wygenerowano           = false;
+}
+
+void StereogramGenerator::changeDefault(int currentDPI, int currentDistanceBetweenEyes)
+{
+    switch(currentDPI)
+    {
+        case 0:
+            _DPI = 76;
+            break;
+        case 1:
+            _DPI = 96;
+            break;
+        case 2:
+            _DPI = 150;
+            break;
+        default:
+            _DPI = 96;
+            break;
+    }
+
+    switch(currentDistanceBetweenEyes)
+    {
+        case 0:
+            _distanceBetweenEyes = 2.5;
+            break;
+        case 1:
+            _distanceBetweenEyes = 2.6;
+            break;
+        case 2:
+            _distanceBetweenEyes = 2.7;
+            break;
+        default:
+            _distanceBetweenEyes = 2.755;
+            break;
+    }
+
+    _eyeSeparation          = roundSomething(_distanceBetweenEyes*_DPI);
+    _depthOfField           = (1.0/3.0);
+    _farOfDots              = separateSomething(0);
 }
 
 int StereogramGenerator::roundSomething(double something)
@@ -46,15 +85,33 @@ int StereogramGenerator::separateSomething(double something)
 //#define separation(Z) round((1-_depthOfField*Z)*_eyeSeparation/(2-_depthOfField*Z))        /* Stereo separation corresponding to position Z */
 //#define _farOfDots separation(0)                               /* ... and corresponding to _farOfDots plane, Z=0 */
 
-void StereogramGenerator::generate(int convex, int color, bool circles)
+void StereogramGenerator::generate(int convex, int color, bool circles, int size)
 {
     if(_wygenerowano)
         delete _imageGeneratedStereogram;
 
-    if(_imageToGenerate->height() >= 720)
-        *_imageToGenerate = _imageToGenerate->scaledToHeight(720);
-    else if(_imageToGenerate->width()>= 1280)
-        *_imageToGenerate = _imageToGenerate->scaledToWidth(1280);
+    switch(size)
+    {
+        case 0:
+            _imageToGenerate->scaled(800,600);
+        break;
+        case 1:
+            _imageToGenerate->scaled(1024,768);
+        break;
+        case 2:
+            _imageToGenerate->scaled(1280,720);
+        break;
+        case 3:
+            _imageToGenerate->scaled(1920,1080);
+        case 4:
+        break;
+        default:
+            if(_imageToGenerate->height() >= 720)
+                *_imageToGenerate = _imageToGenerate->scaledToHeight(720);
+            else if(_imageToGenerate->width()>= 1280)
+                *_imageToGenerate = _imageToGenerate->scaledToWidth(1280);
+        break;
+    }
 
     _widthOfImage_X = _imageToGenerate->width();
     _heightOfImage_Y = _imageToGenerate->height();
@@ -212,7 +269,7 @@ void StereogramGenerator::generate(int convex, int color, bool circles)
 void StereogramGenerator::calculateImageDepth(double **imageDepth, int convex)
 {
     float tmp;
-    if(convex == 1)
+    if(convex)
         tmp = 1.0;
     else
         tmp=-1.0;

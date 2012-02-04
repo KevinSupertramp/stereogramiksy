@@ -36,7 +36,7 @@
        </sizepolicy>
       </property>
       <property name="currentIndex">
-       <number>7</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="page">
        <property name="sizePolicy">
@@ -147,6 +147,16 @@
                   <widget class="QCheckBox" name="checkBox">
                    <property name="text">
                     <string>Wygeneruj pomocnicze kropki</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="checkBox_wkleslosc">
+                   <property name="text">
+                    <string>odwróć wklęsłość</string>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
                    </property>
                   </widget>
                  </item>
@@ -302,7 +312,26 @@ p, li { white-space: pre-wrap; }
                    </widget>
                   </item>
                   <item>
-                   <widget class="QComboBox" name="comboBox_DPI"/>
+                   <widget class="QComboBox" name="comboBox_DPI">
+                    <property name="currentIndex">
+                     <number>1</number>
+                    </property>
+                    <item>
+                     <property name="text">
+                      <string>76</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>96 </string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>150</string>
+                     </property>
+                    </item>
+                   </widget>
                   </item>
                  </layout>
                 </item>
@@ -326,7 +355,31 @@ p, li { white-space: pre-wrap; }
                    </widget>
                   </item>
                   <item>
-                   <widget class="QComboBox" name="comboBox_RozstawOczu"/>
+                   <widget class="QComboBox" name="comboBox_RozstawOczu">
+                    <property name="currentIndex">
+                     <number>2</number>
+                    </property>
+                    <item>
+                     <property name="text">
+                      <string>2.5</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>2.6</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>2.7</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>2.755</string>
+                     </property>
+                    </item>
+                   </widget>
                   </item>
                  </layout>
                 </item>
@@ -387,7 +440,36 @@ p, li { white-space: pre-wrap; }
                  </widget>
                 </item>
                 <item>
-                 <widget class="QComboBox" name="comboBox_rozdzielczosc"/>
+                 <widget class="QComboBox" name="comboBox_rozdzielczosc">
+                  <property name="currentIndex">
+                   <number>4</number>
+                  </property>
+                  <item>
+                   <property name="text">
+                    <string>800x600</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>1024x768</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>1280×720</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>1920 × 1080</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Oryginalna rozdzielczość</string>
+                   </property>
+                  </item>
+                 </widget>
                 </item>
                </layout>
               </item>

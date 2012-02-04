@@ -9,9 +9,16 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     ui->stackedWidget->setCurrentIndex(0);
     ui->stackedWidget->setSizeIncrement(ui->centralWidget->width(),ui->centralWidget->height());
-    ui->pushButton_Save->setDisabled(true);
-    ui->checkBox->setDisabled(true);
-    ui->comboBox->setDisabled(true);
+
+//    ui->pushButton_Save->setDisabled(true);
+//    ui->checkBox->setDisabled(true);
+//    ui->comboBox->setDisabled(true);
+
+//    ui->comboBox_DPI->setDisabled(true);
+//    ui->comboBox_rozdzielczosc->setDisabled(true);
+//    ui->comboBox_RozstawOczu->setDisabled(true);
+//    ui->checkBox_wkleslosc->setDisabled(true);
+    setElementsDisabled(true);
 
     connect(&_stereogramGenerator,SIGNAL(setStatusBarLabel(QString)),this,SLOT(onStatusBarChanged(QString)));
 }
@@ -19,6 +26,23 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::setElementsDisabled(bool disabled)
+{
+    ui->label_DPI->setDisabled(disabled);
+    ui->label_rozdzielczosc->setDisabled(disabled);
+    ui->label_RozstawOczu->setDisabled(disabled);
+
+    ui->pushButton_Save->setDisabled(disabled);
+    ui->checkBox->setDisabled(disabled);
+
+    ui->comboBox->setDisabled(disabled);
+    ui->comboBox_DPI->setDisabled(disabled);
+    ui->comboBox_rozdzielczosc->setDisabled(disabled);
+    ui->comboBox_RozstawOczu->setDisabled(disabled);
+
+    ui->checkBox_wkleslosc->setDisabled(disabled);
 }
 
 void MainWindow::on_pushButton_Generate_clicked()
@@ -39,9 +63,7 @@ void MainWindow::openFile()
         if (!fileName.isEmpty())
         {
            wczytano = wczytajPlik(fileName);
-           ui->pushButton_Save->setDisabled(false);
-           ui->checkBox->setDisabled(false);
-           ui->comboBox->setDisabled(false);
+           setElementsDisabled(false);
         }
     }
     catch(std::exception &e)
@@ -75,7 +97,7 @@ bool MainWindow::wczytajPlik(QString fileName)
     setLabel_info(imageCpy->width(),imageCpy->height(),file.size(),imageCpy->allGray());
 
     _stereogramGenerator.setImage(imageCpy);
-    _stereogramGenerator.generate(1);
+    _stereogramGenerator.generate(1,ui->comboBox->currentIndex(),ui->checkBox->checkState());
 
     imageCpy = _stereogramGenerator.getImage();
 
@@ -135,16 +157,8 @@ ui->stackedWidget->setSizeIncrement(ui->centralWidget->width(),ui->centralWidget
 
 void MainWindow::on_checkBox_clicked()
 {
-    if(ui->checkBox->checkState())
-    {
-        _stereogramGenerator.generate(1,ui->comboBox->currentIndex(),1);
-        imageCpy = _stereogramGenerator.getImage();
-    }
-    else
-    {
-        _stereogramGenerator.generate(1,ui->comboBox->currentIndex(),0);
-        imageCpy = _stereogramGenerator.getImage();
-    }
+    _stereogramGenerator.generate(ui->checkBox_wkleslosc->checkState(),ui->comboBox->currentIndex(),ui->checkBox->checkState());
+    imageCpy = _stereogramGenerator.getImage();
     update();
 }
 
@@ -425,16 +439,8 @@ void MainWindow::on_pushButton_scen2_ok_clicked()
 
 void MainWindow::on_comboBox_activated(int index)
 {
-    if(ui->checkBox->checkState())
-    {
-        _stereogramGenerator.generate(1,index,1);
-        imageCpy = _stereogramGenerator.getImage();
-    }
-    else
-    {
-        _stereogramGenerator.generate(1,index,0);
-        imageCpy = _stereogramGenerator.getImage();
-    }
+    _stereogramGenerator.generate(1,index,ui->checkBox->checkState());
+    imageCpy = _stereogramGenerator.getImage();
     update();
 }
 
@@ -450,4 +456,27 @@ void MainWindow::on_pushButton_Oprogramie_clicked()
 void MainWindow::on_pushButton_oprogramie_menu_clicked()
 {
     ui->stackedWidget->setCurrentIndex(0);
+}
+
+void MainWindow::on_comboBox_DPI_activated(int index)
+{
+    _stereogramGenerator.changeDefault(index,ui->comboBox_RozstawOczu->currentIndex());
+    _stereogramGenerator.generate(1,ui->comboBox->currentIndex(),ui->checkBox->checkState());
+    imageCpy = _stereogramGenerator.getImage();
+    update();
+}
+
+void MainWindow::on_comboBox_RozstawOczu_activated(int index)
+{
+    _stereogramGenerator.changeDefault(ui->comboBox_DPI->currentIndex(),index);
+    _stereogramGenerator.generate(1,ui->comboBox->currentIndex(),ui->checkBox->checkState());
+    imageCpy = _stereogramGenerator.getImage();
+    update();
+}
+
+void MainWindow::on_checkBox_wkleslosc_clicked()
+{
+    _stereogramGenerator.generate(ui->checkBox_wkleslosc->checkState(),ui->comboBox->currentIndex(),ui->checkBox->checkState());
+    imageCpy = _stereogramGenerator.getImage();
+    update();
 }

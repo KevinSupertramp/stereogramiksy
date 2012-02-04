@@ -22,11 +22,7 @@ public:
 
 
 
-    void update();
-    void openFile();
-    void saveFile();
-    bool wczytajPlik(QString);
-    void resizeEvent(QResizeEvent *);
+
     /* funkcje do gry */
     void loadGame(QString);
     void statsGame(int);
@@ -80,18 +76,30 @@ private slots:
 
     void on_pushButton_oprogramie_menu_clicked();
 
-private:
+    void on_comboBox_DPI_activated(int index);
 
+    void on_comboBox_RozstawOczu_activated(int index);
+
+    void on_checkBox_wkleslosc_clicked();
+
+private:
+    void update();
+    void openFile();
+    void saveFile();
+    bool wczytajPlik(QString);
+    void resizeEvent(QResizeEvent *);
 
     Ui::MainWindow *ui;
 
     QString *fileName;
-    QImage *imageOrg, *imageCpy;
+    QImage *imageOrg, *imageCpy, *imageToSave;
     QImage scaledImage;
     bool allGray;
     bool wczytano;
 
     StereogramGenerator _stereogramGenerator;
+
+    void setElementsDisabled(bool disabled);
 
     /* do gry */
     QString tytulGra;

@@ -16,8 +16,9 @@ public:
         inline      void setImage(QImage *img){_imageToGenerate = img;}
         inline      QImage* getImage(){return _imageGeneratedStereogram;}
 
-        void        generate(int convex, int color=false, bool circles=false);
+        void        generate(int convex, int color=false, bool circles=false, int size=5);
         void        setDefault(int DPI, double distanceBetweenEyes);
+        void        changeDefault(int currentDPI, int currentDistanceBetweenEyes);
 
     signals:
         void        setStatusBarLabel(QString tmp);
