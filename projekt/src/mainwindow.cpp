@@ -163,6 +163,9 @@ void MainWindow::on_pushButton_clicked()
     ui->stackedWidget->setCurrentIndex(0);
 }
 
+/** @brief Wybor zakladki 'Gra' z menu glownego programu.
+ */
+
 void MainWindow::on_pushButton_Games_clicked()
 {
     ui->stackedWidget->setCurrentIndex(2);
@@ -189,17 +192,28 @@ void MainWindow::on_pushButton_Save_clicked()
     saveFile();
 }
 
+/** @brief W zakladce wyboru gier wybieramy gre w ktora chcemy zagrac.
+ */
+
 void MainWindow::on_pushButton_wg_Graj_clicked()
 {
     QModelIndex wybor = ui->listView->currentIndex();
-    loadGame(wybor.data().toString());
+    if(wybor.isValid())
+        loadGame(wybor.data().toString());
 }
+
+/** @brief Powrot do menu glownego z zakladki wybory gier.
+ */
 
 void MainWindow::on_pushButton_wg_Menu_clicked()
 {
     ui->stackedWidget->setCurrentIndex(0);
 }
 
+/** @brief Wczytanie parametrow gry.
+ *
+ *  @param gra Nazwa gry w ktora chcemy zagrac.
+ */
 void MainWindow::loadGame(QString gra)
 {
     ui->stackedWidget->setCurrentIndex(3);
@@ -216,9 +230,16 @@ void MainWindow::loadGame(QString gra)
         hasloObrazkaGra.append(in.readLine());
     }
     punktyGra=ktoryObrazekGra=0;
+    ui->label_game_status->setText("");
+    ui->lineEdit_game_haslo->setText("");
     statsGame(0);
     showGame();
 }
+
+/** @brief Uaktulnienie statystyk  oraz punktow gry.
+ *
+ *  @param wygrana Sprawdza czy odpowiedz jest prawidlowa.
+ */
 
 void MainWindow::statsGame(int wygrana)
 {
@@ -231,6 +252,9 @@ void MainWindow::statsGame(int wygrana)
     ui->lineEdit_game_nazwa->setText(tytulGra);
     ui->lineEdit_game_punkty->setText(QString::number(punktyGra)+"/"+QString::number(ileObrazkowGra*10));
 }
+
+/** @brief Wyswietlenie obrazka w grze.
+ */
 
 void MainWindow::showGame()
 {
@@ -251,6 +275,10 @@ void MainWindow::showGame()
     scaledImage = imageCpy->scaled(ui->label_game->width(),ui->label_game->height(),Qt::KeepAspectRatio);
     ui->label_game->setPixmap(QPixmap::fromImage(scaledImage,Qt::AutoColor));
 }
+
+/** @brief Akcja na klikniecie odpowiedzi do gry.
+ */
+
 void MainWindow::on_pushButton_game_Ok_clicked()
 {
     int odpowiedz=0;
@@ -269,6 +297,9 @@ void MainWindow::on_pushButton_game_Ok_clicked()
             }
 }
 
+/** @brief Wyswietla zakladke podsumowania gry.
+ */
+
 void MainWindow::endGame(){
     ui->stackedWidget->setCurrentIndex(4);
     ui->lcdNumber_end_punkty->display(punktyGra);
@@ -281,23 +312,35 @@ void MainWindow::on_pushButton_2_end_menu_clicked()
 }
 
 
-/* funkcje do scenariusza */
+
+/** @brief Wybor zakladki 'Stworz scenariusz' w menu glownym.
+ */
 
 void MainWindow::on_pushButton_Scenariusz_clicked()
 {
     ui->stackedWidget->setCurrentIndex(5);
+    ui->pushButton_scen_dalej->setEnabled(false);
+    fileListScen.clear();
+    haslaListScen.clear();
+    QStringListModel *model;
+    model = new QStringListModel(fileListScen);
+    ui->listView_scen_file->setModel(model);
 }
+
+/** @brief Powrot do menu z zakladki scenariusz.
+ */
 
 void MainWindow::on_pushButton_scen_menu_clicked()
 {
     ui->stackedWidget->setCurrentIndex(0);
 }
 
-
+/** @brief Przycisk akcji dodajacy obrazek do scenariusza.
+ */
 
 void MainWindow::on_pushButton_scen_add_clicked()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
+     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
                                                      "",
                                                      tr("Graphic files (*.jpg *.png *.bmp);;All files (*.*)"));
 
@@ -305,8 +348,11 @@ void MainWindow::on_pushButton_scen_add_clicked()
      fileListScen.append(fileName);
      model = new QStringListModel(fileListScen);
      ui->listView_scen_file->setModel(model);
+     if(!fileName.isEmpty()) ui->pushButton_scen_dalej->setEnabled(true);
 }
 
+/** @brief Dodanie wszystkich obrazkow i przejscie do kolejnego etapu.
+ */
 void MainWindow::on_pushButton_scen_dalej_clicked()
 {
     ui->stackedWidget->setCurrentIndex(6);
@@ -314,13 +360,18 @@ void MainWindow::on_pushButton_scen_dalej_clicked()
     int ilehaslo = haslaListScen.count();
     ui->lineEdit_scen2_ile->setText(QString::number(ilefile-ilehaslo));
     ui->pushButton_scen2_ok->setEnabled(false);
+    ui->lineEdit_scen2_haslo->setText("");
 }
 
+/** @brief Powrot do menu z zakladki stworzenia scenariusza.
+ */
 void MainWindow::on_pushButton_scen2_menu_clicked()
 {
     ui->stackedWidget->setCurrentIndex(0);
 }
 
+/** @brief Dodanie hasla do gry przy tworzeniu scenariusza.
+ */
 void MainWindow::on_pushButton_scen2_add_clicked()
 {
     QStringListModel *model;
@@ -335,8 +386,12 @@ void MainWindow::on_pushButton_scen2_add_clicked()
         ui->pushButton_scen2_add->setEnabled(false);
         ui->pushButton_scen2_ok->setEnabled(true);
         }
+    ui->lineEdit_scen2_haslo->setText("");
+
 }
 
+/** @brief Zakonczenie tworzenia scenariusza i zapis do pliku.
+ */
 void MainWindow::on_pushButton_scen2_ok_clicked()
 {
     QFile file("gry/lista.txt");
@@ -365,6 +420,7 @@ void MainWindow::on_pushButton_scen2_ok_clicked()
         }
 
     file2.close();
+    ui->stackedWidget->setCurrentIndex(0);
 }
 
 void MainWindow::on_comboBox_activated(int index)
@@ -380,4 +436,18 @@ void MainWindow::on_comboBox_activated(int index)
         imageCpy = _stereogramGenerator.getImage();
     }
     update();
+}
+
+/** @brief Wybor zakladki 'o programie' z menu glownego.
+ */
+void MainWindow::on_pushButton_Oprogramie_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(7);
+}
+
+/** @brief Powrot do menu z zakladki o programie.
+ */
+void MainWindow::on_pushButton_oprogramie_menu_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(0);
 }

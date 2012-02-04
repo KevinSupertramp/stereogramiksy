@@ -36,7 +36,7 @@
        </sizepolicy>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="page">
        <property name="sizePolicy">
@@ -71,6 +71,13 @@
              <widget class="QPushButton" name="pushButton_Scenariusz">
               <property name="text">
                <string>Stwórz scenariusz</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButton_Oprogramie">
+              <property name="text">
+               <string>O programie</string>
               </property>
              </widget>
             </item>
@@ -826,6 +833,7 @@ p, li { white-space: pre-wrap; }
         </layout>
        </widget>
       </widget>
+      <widget class="QWidget" name="page_8"/>
      </widget>
     </item>
    </layout>
