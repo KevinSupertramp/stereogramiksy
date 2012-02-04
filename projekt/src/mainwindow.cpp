@@ -326,6 +326,7 @@ void MainWindow::showGame()
     //imageOrg->load(fileName);
 
     //qDebug() << " 1 " << imageCpy->width() << " " << imageCpy->height();
+    qDebug() << adresObrazkaGra.at(ktoryObrazekGra);
 
     _stereogramGenerator.setImage(imageCpy);
 
@@ -354,7 +355,6 @@ void MainWindow::on_pushButton_game_Ok_clicked()
         } else
             {
             endGame();
-
             }
 }
 

@@ -31,34 +31,18 @@ void StereogramGenerator::changeDefault(int currentDPI, int currentDistanceBetwe
 {
     switch(currentDPI)
     {
-        case 0:
-            _DPI = 76;
-            break;
-        case 1:
-            _DPI = 96;
-            break;
-        case 2:
-            _DPI = 150;
-            break;
-        default:
-            _DPI = 96;
-            break;
+        case 0:     _DPI = 76;      break;
+        case 1:     _DPI = 96;      break;
+        case 2:     _DPI = 150;     break;
+        default:    _DPI = 96;      break;
     }
 
     switch(currentDistanceBetweenEyes)
     {
-        case 0:
-            _distanceBetweenEyes = 2.5;
-            break;
-        case 1:
-            _distanceBetweenEyes = 2.6;
-            break;
-        case 2:
-            _distanceBetweenEyes = 2.7;
-            break;
-        default:
-            _distanceBetweenEyes = 2.755;
-            break;
+        case 0:     _distanceBetweenEyes = 2.5;     break;
+        case 1:     _distanceBetweenEyes = 2.6;     break;
+        case 2:     _distanceBetweenEyes = 2.7;     break;
+        default:    _distanceBetweenEyes = 2.755;   break;
     }
 
     _eyeSeparation          = roundSomething(_distanceBetweenEyes*_DPI);
@@ -133,86 +117,86 @@ void StereogramGenerator::generate(int convex, int color, bool circles, int size
 
     for(int y=0;y<_heightOfImage_Y;++y)
     {
-        unsigned int pix[_widthOfImage_X];
-        int same[_heightOfImage_Y];
+        unsigned int colorOfPixel[_widthOfImage_X];
+        int samePixels[_heightOfImage_Y];
 
-        int s;
-        int left, right;
+        int stereoSeparationOfPoint;
+        int leftEye, rightEye;
 
         for(int x=0;x<_widthOfImage_X;++x)
-            same[x]=x;
+            samePixels[x]=x;
 
         for(int x=0;x<_widthOfImage_X;++x)
         {
-            s = separateSomething(imageDepth[x][y]);
+            stereoSeparationOfPoint = separateSomething(imageDepth[x][y]);
 
-            left = x - s/2;
-            right = left + s;
+            leftEye = x - stereoSeparationOfPoint/2;
+            rightEye = leftEye + stereoSeparationOfPoint;
 
-            if(0 <= left && right < _widthOfImage_X)
+            if(0 <= leftEye && rightEye < _widthOfImage_X)
             {
-                int visible;                                        /* First, perform hidden-surface removal */
-                int t=1;                                            /* We will check the points (x-t,y) and (x+t,y) */
-                float zt;                                           /* Z-coord of ray at these two points */
+                int isVisible;                                        /* First, perform hidden-surface removal */
+                int tmp=1;                                            /* We will check the points (x-tmp,y) and (x+tmp,y) */
+                float rayOfImageDepthAtPoint;                                           /* Z-coord of ray at these two points */
 
                 do
                 {
                                                                                             /* False if obscured */
-                    zt = imageDepth[x][y] + 2*(2 - _depthOfField*imageDepth[x][y])*t/(_depthOfField*_eyeSeparation);
-                    visible = imageDepth[x-t][y] < zt && imageDepth[x+t][y] < zt;             /* False if obscured */
+                    rayOfImageDepthAtPoint = imageDepth[x][y] + 2*(2 - _depthOfField*imageDepth[x][y])*tmp/(_depthOfField*_eyeSeparation);
+                    isVisible = imageDepth[x-tmp][y] < rayOfImageDepthAtPoint && imageDepth[x+tmp][y] < rayOfImageDepthAtPoint;             /* False if obscured */
 
-                    t++;
+                    tmp++;
                 }
-                while (visible && zt < 1);                        /*  Done hidden-surface removal  ... */
+                while (isVisible && rayOfImageDepthAtPoint < 1);                        /*  Done hidden-surface removal  ... */
 
-                if (visible)
+                if (isVisible)
                 {                                      /*  ... so record the fact that pixels at */
-                    int l = same[left];                                 /* ... left and right are the same */
-                    while (l != left && l != right)
-                    if (l < right)
+                    int left_N_right = samePixels[leftEye];                                 /* ... leftEye and rightEye are the samePixels */
+                    while (left_N_right != leftEye && left_N_right != rightEye)
+                    if (left_N_right < rightEye)
                     {                                    /* But first, juggle the pointers ... */
-                        left = l;                                           /* ... until either same[left]=left */
-                        l = same[left];                                     /* ... or same[left]=right */
+                        leftEye = left_N_right;                                           /* ... until either samePixels[leftEye]=leftEye */
+                        left_N_right = samePixels[leftEye];                                     /* ... or samePixels[leftEye]=rightEye */
                     }
                     else
                     {
-                        same[left] = right;
-                        left = right;
-                        l = same[left];
-                        right = l;
+                        samePixels[leftEye] = rightEye;
+                        leftEye = rightEye;
+                        left_N_right = samePixels[leftEye];
+                        rightEye = left_N_right;
                     }
 
-                same[left] = right; /* This is where we actually record it */
+                samePixels[leftEye] = rightEye; /* This is where we actually record it */
                 }
             }
         }
 
         for (int x=_widthOfImage_X-1 ; x>= 0 ; x--)
         {                                   /*  Now set the pixels on this scan line */
-            if (same[x] == x) pix[x] = qrand()&1;/* Free choice; do it randomly */
-            else pix[x] = pix[same[x]]; /* Constrained choice; obey constraint */
+            if (samePixels[x] == x) colorOfPixel[x] = qrand()&1;/* Free choice; do it randomly */
+            else colorOfPixel[x] = colorOfPixel[samePixels[x]]; /* Constrained choice; obey constraint */
 
             switch (color)
             {
-                case 0:     _imageGeneratedStereogram->setPixel(x, y, pix[x]*16775930); /* White */         break;
-                case 1:     _imageGeneratedStereogram->setPixel(x, y, pix[x]*14210000); /* Gray */          break;
-                case 2:     _imageGeneratedStereogram->setPixel(x, y, pix[x]*11500000); /* Purple */        break;
-                case 3:     _imageGeneratedStereogram->setPixel(x, y, pix[x]*11800000); /* Violet */        break;
-                case 4:     _imageGeneratedStereogram->setPixel(x, y, pix[x]*14245000); /* Pink */          break;
-                case 5:     _imageGeneratedStereogram->setPixel(x, y, pix[x]*14300000); /* Scarlet */       break;
-                case 6:     _imageGeneratedStereogram->setPixel(x, y, pix[x]*16000000); /* Red */           break;
-                case 7:     _imageGeneratedStereogram->setPixel(x, y, pix[x]*14250000); /* Orange */        break;
-                case 8:     _imageGeneratedStereogram->setPixel(x, y, pix[x]*9000000); /* Brown */          break;
-                case 9:     _imageGeneratedStereogram->setPixel(x, y, pix[x]*14272000); /* Yellow */        break;
-                case 10:    _imageGeneratedStereogram->setPixel(x, y, pix[x]*9300000); /* Pistachio */      break;
-                case 11:    _imageGeneratedStereogram->setPixel(x, y, pix[x]*125000); /* Green */           break;
-                case 12:    _imageGeneratedStereogram->setPixel(x, y, pix[x]*1830000); /* Sea green */      break;
-                case 13:    _imageGeneratedStereogram->setPixel(x, y, pix[x]*1900000); /* Sky blue */       break;
-                case 14:    _imageGeneratedStereogram->setPixel(x, y, pix[x]*300000); /* Indigo */          break;
-                case 15:    _imageGeneratedStereogram->setPixel(x, y, pix[x]*255); /* Blue */               break;
-                case 16:    _imageGeneratedStereogram->setPixel(x, y, pix[x]*16000000/_imageCopy->width()*x); /* Multi-color columns */ break;
-                case 17:    _imageGeneratedStereogram->setPixel(x, y, pix[x]*16000000/_imageCopy->height()*y); /* Multi-color rows */   break;
-                default:    _imageGeneratedStereogram->setPixel(x, y, pix[x]*16775930); /* White */         break;
+                case 0:     _imageGeneratedStereogram->setPixel(x, y, colorOfPixel[x]*16775930); /* White */         break;
+                case 1:     _imageGeneratedStereogram->setPixel(x, y, colorOfPixel[x]*14210000); /* Gray */          break;
+                case 2:     _imageGeneratedStereogram->setPixel(x, y, colorOfPixel[x]*11500000); /* Purple */        break;
+                case 3:     _imageGeneratedStereogram->setPixel(x, y, colorOfPixel[x]*11800000); /* Violet */        break;
+                case 4:     _imageGeneratedStereogram->setPixel(x, y, colorOfPixel[x]*14245000); /* Pink */          break;
+                case 5:     _imageGeneratedStereogram->setPixel(x, y, colorOfPixel[x]*14300000); /* Scarlet */       break;
+                case 6:     _imageGeneratedStereogram->setPixel(x, y, colorOfPixel[x]*16000000); /* Red */           break;
+                case 7:     _imageGeneratedStereogram->setPixel(x, y, colorOfPixel[x]*14250000); /* Orange */        break;
+                case 8:     _imageGeneratedStereogram->setPixel(x, y, colorOfPixel[x]*9000000); /* Brown */          break;
+                case 9:     _imageGeneratedStereogram->setPixel(x, y, colorOfPixel[x]*14272000); /* Yellow */        break;
+                case 10:    _imageGeneratedStereogram->setPixel(x, y, colorOfPixel[x]*9300000); /* Pistachio */      break;
+                case 11:    _imageGeneratedStereogram->setPixel(x, y, colorOfPixel[x]*125000); /* Green */           break;
+                case 12:    _imageGeneratedStereogram->setPixel(x, y, colorOfPixel[x]*1830000); /* Sea green */      break;
+                case 13:    _imageGeneratedStereogram->setPixel(x, y, colorOfPixel[x]*1900000); /* Sky blue */       break;
+                case 14:    _imageGeneratedStereogram->setPixel(x, y, colorOfPixel[x]*300000); /* Indigo */          break;
+                case 15:    _imageGeneratedStereogram->setPixel(x, y, colorOfPixel[x]*255); /* Blue */               break;
+                case 16:    _imageGeneratedStereogram->setPixel(x, y, colorOfPixel[x]*16000000/_imageCopy->width()*x); /* Multi-color columns */ break;
+                case 17:    _imageGeneratedStereogram->setPixel(x, y, colorOfPixel[x]*16000000/_imageCopy->height()*y); /* Multi-color rows */   break;
+                default:    _imageGeneratedStereogram->setPixel(x, y, colorOfPixel[x]*16775930); /* White */         break;
             }
         }
 

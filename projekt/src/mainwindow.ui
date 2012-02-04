@@ -903,16 +903,16 @@ p, li { white-space: pre-wrap; }
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_10">
             <item>
-             <widget class="QPushButton" name="pushButton_scen_menu">
+             <widget class="QPushButton" name="pushButton_scen_dalej">
               <property name="text">
-               <string>Menu</string>
+               <string>Dalej</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_scen_dalej">
+             <widget class="QPushButton" name="pushButton_scen_menu">
               <property name="text">
-               <string>Dalej</string>
+               <string>Menu</string>
               </property>
              </widget>
             </item>
@@ -1003,16 +1003,16 @@ p, li { white-space: pre-wrap; }
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_12">
             <item>
-             <widget class="QPushButton" name="pushButton_scen2_menu">
+             <widget class="QPushButton" name="pushButton_scen2_ok">
               <property name="text">
-               <string>Menu</string>
+               <string>Zatwierdź</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_scen2_ok">
+             <widget class="QPushButton" name="pushButton_scen2_menu">
               <property name="text">
-               <string>Zatwierdź</string>
+               <string>Menu</string>
               </property>
              </widget>
             </item>
