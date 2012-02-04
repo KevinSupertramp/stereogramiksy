@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/new/icon">
+        <file>back.png</file>
+        <file>exit.png</file>
+        <file>Open.png</file>
+        <file>Refresh.png</file>
+        <file>Save.png</file>
+    </qresource>
+</RCC>
