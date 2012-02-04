@@ -16,10 +16,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     onStatusBarChanged(QString("Witaj w programie Stereogramiksy."));
 
-    ui->pushButton_Koniec->setIcon(QIcon(":new/prefix1/exit.png"));
-    ui->pushButton_Open->setIcon(QIcon(":new/prefix1/Open.png"));
-    ui->pushButton_Save->setIcon(QIcon(":new/prefix1/Save.png"));
-    ui->pushButton->setIcon(QIcon(":new/prefix1/back.png"));
+    ui->pushButton_Koniec->setIcon(QIcon(":new/icon/exit.png"));
+    ui->pushButton_Open->setIcon(QIcon(":new/icon/Open.png"));
+    ui->pushButton_Save->setIcon(QIcon(":new/icon/Save.png"));
+    ui->pushButton->setIcon(QIcon(":new/icon/back.png"));
 }
 
 MainWindow::~MainWindow()
