@@ -13,9 +13,13 @@ MainWindow::MainWindow(QWidget *parent) :
     setElementsDisabled(true);
 
     connect(&_stereogramGenerator,SIGNAL(setStatusBarLabel(QString)),this,SLOT(onStatusBarChanged(QString)));
-//    connect(&,SIGNAL(setStatusBarLabel(QString)),this,SLOT(onStatusBarChanged(QString)));
 
     onStatusBarChanged(QString("Witaj w programie Stereogramiksy."));
+
+    ui->pushButton_Koniec->setIcon(QIcon(":new/prefix1/exit.png"));
+    ui->pushButton_Open->setIcon(QIcon(":new/prefix1/Open.png"));
+    ui->pushButton_Save->setIcon(QIcon(":new/prefix1/Save.png"));
+    ui->pushButton->setIcon(QIcon(":new/prefix1/back.png"));
 }
 
 MainWindow::~MainWindow()

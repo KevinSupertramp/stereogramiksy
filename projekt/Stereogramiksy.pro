@@ -10,13 +10,14 @@ TARGET = Stereogramiksy
 TEMPLATE = app
 
 
-SOURCES += 	src/main.cpp\
-			src/mainwindow.cpp \
-			src/stereogramgenerator.cpp
+SOURCES +=  src/main.cpp\
+            src/mainwindow.cpp \
+            src/stereogramgenerator.cpp
 
 HEADERS  += src/mainwindow.h \
-			src/stereogramgenerator.h
+            src/stereogramgenerator.h
 
 FORMS    += src/mainwindow.ui
 
-RESOURCES +=
+RESOURCES += \
+            zasoby/ikony.qrc
