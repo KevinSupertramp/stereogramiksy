@@ -78,6 +78,8 @@ private slots:
 
     void on_pushButton_Oprogramie_clicked();
 
+    void on_pushButton_oprogramie_menu_clicked();
+
 private:
 
 
