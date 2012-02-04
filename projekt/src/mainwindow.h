@@ -90,12 +90,14 @@ private slots:
     void on_pushButton_clicked();
 
     /** @brief Wybor zakladki 'Gra' z menu glownego programu.
+      * @return void
      */
     void on_pushButton_Games_clicked();
 
     void on_pushButton_Save_clicked();
 
     /** @brief W zakladce wyboru gier wybieramy gre w ktora chcemy zagrac.
+      * @return void
      */
     void on_pushButton_wg_Graj_clicked();
 
@@ -104,6 +106,7 @@ private slots:
     void on_pushButton_wg_Menu_clicked();
 
     /** @brief Akcja na klikniecie odpowiedzi do gry.
+      * @return void
      */
     void on_pushButton_game_Ok_clicked();
 
@@ -112,40 +115,49 @@ private slots:
     void on_checkBox_clicked();
 
     /** @brief Wybor zakladki 'Stworz scenariusz' w menu glownym.
+      * @return void
      */
     void on_pushButton_Scenariusz_clicked();
 
     /** @brief Powrot do menu z zakladki scenariusz.
+      * @return void
      */
     void on_pushButton_scen_menu_clicked();
 
     /** @brief Przycisk akcji dodajacy obrazek do scenariusza.
+      * @return void
      */
     void on_pushButton_scen_add_clicked();
 
     /** @brief Dodanie wszystkich obrazkow i przejscie do kolejnego etapu.
+      * @return void
      */
     void on_pushButton_scen_dalej_clicked();
 
     /** @brief Powrot do menu z zakladki stworzenia scenariusza.
+      * @return void
      */
     void on_pushButton_scen2_menu_clicked();
 
     /** @brief Dodanie hasla do gry przy tworzeniu scenariusza.
+      * @return void
      */
     void on_pushButton_scen2_add_clicked();
 
     /** @brief Zakonczenie tworzenia scenariusza i zapis do pliku.
+      * @return void
      */
     void on_pushButton_scen2_ok_clicked();
 
     void on_comboBox_activated(int index);
 
     /** @brief Wybor zakladki 'o programie' z menu glownego.
+      * @return void
      */
     void on_pushButton_Oprogramie_clicked();
 
     /** @brief Powrot do menu z zakladki o programie.
+      * @return void
      */
     void on_pushButton_oprogramie_menu_clicked();
 
@@ -324,17 +336,25 @@ private:
     /** @brief Wczytanie parametrow gry.
      *
      *  @param gra Nazwa gry w ktora chcemy zagrac.
+     * @see statsGame();
+     * @see showGame();
+     * @see endGame();
+     * @return void
      */
     void loadGame(QString);
     /** @brief Uaktulnienie statystyk  oraz punktow gry.
      *
      *  @param wygrana Sprawdza czy odpowiedz jest prawidlowa.
+     * @return void
      */
     void statsGame(int);
     /** @brief Wyswietlenie obrazka w grze.
+      * @see endGame();
+      * @return void
      */
     void showGame();
     /** @brief Wyswietla zakladke podsumowania gry.
+      * @return void
      */
     void endGame();
 
