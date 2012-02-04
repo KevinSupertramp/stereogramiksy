@@ -89,38 +89,64 @@ private slots:
 
     void on_pushButton_clicked();
 
+    /** @brief Wybor zakladki 'Gra' z menu glownego programu.
+     */
     void on_pushButton_Games_clicked();
 
     void on_pushButton_Save_clicked();
 
+    /** @brief W zakladce wyboru gier wybieramy gre w ktora chcemy zagrac.
+     */
     void on_pushButton_wg_Graj_clicked();
 
+    /** @brief Powrot do menu glownego z zakladki wybory gier.
+     */
     void on_pushButton_wg_Menu_clicked();
 
+    /** @brief Akcja na klikniecie odpowiedzi do gry.
+     */
     void on_pushButton_game_Ok_clicked();
 
     void on_pushButton_2_end_menu_clicked();
 
     void on_checkBox_clicked();
 
+    /** @brief Wybor zakladki 'Stworz scenariusz' w menu glownym.
+     */
     void on_pushButton_Scenariusz_clicked();
 
+    /** @brief Powrot do menu z zakladki scenariusz.
+     */
     void on_pushButton_scen_menu_clicked();
 
+    /** @brief Przycisk akcji dodajacy obrazek do scenariusza.
+     */
     void on_pushButton_scen_add_clicked();
 
+    /** @brief Dodanie wszystkich obrazkow i przejscie do kolejnego etapu.
+     */
     void on_pushButton_scen_dalej_clicked();
 
+    /** @brief Powrot do menu z zakladki stworzenia scenariusza.
+     */
     void on_pushButton_scen2_menu_clicked();
 
+    /** @brief Dodanie hasla do gry przy tworzeniu scenariusza.
+     */
     void on_pushButton_scen2_add_clicked();
 
+    /** @brief Zakonczenie tworzenia scenariusza i zapis do pliku.
+     */
     void on_pushButton_scen2_ok_clicked();
 
     void on_comboBox_activated(int index);
 
+    /** @brief Wybor zakladki 'o programie' z menu glownego.
+     */
     void on_pushButton_Oprogramie_clicked();
 
+    /** @brief Powrot do menu z zakladki o programie.
+     */
     void on_pushButton_oprogramie_menu_clicked();
 
     void on_comboBox_DPI_activated(int index);
@@ -249,23 +275,67 @@ private:
 
 
     /* do gry */
+    /**
+      * Zmienna tytulGra - przechowuje nazwe gry
+      * Zmienna prywatna.
+      */
     QString tytulGra;
+    /**
+      * Zmienna ileObrazkowGra - przechowuje liczbe obrazkow w grze
+      * Zmienna prywatna.
+      */
     int ileObrazkowGra;
+    /**
+      * Zmienna adresObrazkaGra - przechowuje adres do obrazka w grze
+      * Zmienna prywatna.
+      */
     QStringList adresObrazkaGra;
+    /**
+      * Zmienna hasloObrazkaGra - przechowuje odpowiedz do obrazka w grze
+      * Zmienna prywatna.
+      */
     QStringList hasloObrazkaGra;
+    /**
+      * Zmienna punktyGra - przechowuje ilosc zgromadzonych punktów w grze
+      * Zmienna prywatna.
+      */
     int  punktyGra;
+    /**
+      * Zmienna ktoryObrazekGra - przechowuje aktualny obrazek do wyswietlenia w grze
+      * Zmienna prywatna.
+      */
     int ktoryObrazekGra;
     /* koniec do gry */
     /* generator scenariuszy */
+    /**
+      * Zmienna fileListScene - przechowuje adresy obrazkow w generatorze scenariuszy
+      * Zmienna prywatna.
+      */
     QStringList fileListScen;
+    /**
+      * Zmienna haslaListScene - przechowuje odpowiedzi do obrazkow w generatorze scenariuszy
+      * Zmienna prywatna.
+      */
     QStringList haslaListScen;
     /*koniec generator scenariuszy */
 
 
     /* funkcje do gry */
+    /** @brief Wczytanie parametrow gry.
+     *
+     *  @param gra Nazwa gry w ktora chcemy zagrac.
+     */
     void loadGame(QString);
+    /** @brief Uaktulnienie statystyk  oraz punktow gry.
+     *
+     *  @param wygrana Sprawdza czy odpowiedz jest prawidlowa.
+     */
     void statsGame(int);
+    /** @brief Wyswietlenie obrazka w grze.
+     */
     void showGame();
+    /** @brief Wyswietla zakladke podsumowania gry.
+     */
     void endGame();
 
 };
