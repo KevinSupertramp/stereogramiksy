@@ -9,5 +9,8 @@
         <file>play.png</file>
         <file>about.png</file>
         <file>magic.png</file>
+        <file>tick.png</file>
+        <file>add.png</file>
+        <file>next.png</file>
     </qresource>
 </RCC>
