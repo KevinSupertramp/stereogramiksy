@@ -20,6 +20,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->pushButton_Open->setIcon(QIcon(":new/icon/Open.png"));
     ui->pushButton_Save->setIcon(QIcon(":new/icon/Save.png"));
     ui->pushButton->setIcon(QIcon(":new/icon/back.png"));
+    ui->pushButton_Generate->setIcon(QIcon(":new/icon/stereo.png"));
+    ui->pushButton_Games->setIcon(QIcon(":new/icon/play.png"));
+    ui->pushButton_Oprogramie->setIcon(QIcon(":new/icon/about.png"));
+    ui->pushButton_Scenariusz->setIcon(QIcon(":new/icon/magic.png"));
 }
 
 MainWindow::~MainWindow()
