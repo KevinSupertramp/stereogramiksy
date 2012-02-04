@@ -82,8 +82,10 @@ private slots:
 
     void on_checkBox_wkleslosc_clicked();
 
+    void on_checkBox_dopasujDoOkna_clicked();
+
 private:
-    void update();
+    void update(bool dopasuj=true);
     void openFile();
     void saveFile();
     bool wczytajPlik(QString);

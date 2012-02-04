@@ -10,17 +10,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->stackedWidget->setCurrentIndex(0);
     ui->stackedWidget->setSizeIncrement(ui->centralWidget->width(),ui->centralWidget->height());
 
-//    ui->pushButton_Save->setDisabled(true);
-//    ui->checkBox->setDisabled(true);
-//    ui->comboBox->setDisabled(true);
-
-//    ui->comboBox_DPI->setDisabled(true);
-//    ui->comboBox_rozdzielczosc->setDisabled(true);
-//    ui->comboBox_RozstawOczu->setDisabled(true);
-//    ui->checkBox_wkleslosc->setDisabled(true);
     setElementsDisabled(true);
 
     connect(&_stereogramGenerator,SIGNAL(setStatusBarLabel(QString)),this,SLOT(onStatusBarChanged(QString)));
+//    connect(&,SIGNAL(setStatusBarLabel(QString)),this,SLOT(onStatusBarChanged(QString)));
+
+    onStatusBarChanged(QString("Witaj w programie Stereogramiksy."));
 }
 
 MainWindow::~MainWindow()
@@ -35,7 +30,10 @@ void MainWindow::setElementsDisabled(bool disabled)
     ui->label_RozstawOczu->setDisabled(disabled);
 
     ui->pushButton_Save->setDisabled(disabled);
+
     ui->checkBox->setDisabled(disabled);
+    ui->checkBox_keepAspectRatio->setDisabled(disabled);
+    ui->checkBox_dopasujDoOkna->setDisabled(disabled);
 
     ui->comboBox->setDisabled(disabled);
     ui->comboBox_DPI->setDisabled(disabled);
@@ -48,6 +46,7 @@ void MainWindow::setElementsDisabled(bool disabled)
 void MainWindow::on_pushButton_Generate_clicked()
 {
     ui->stackedWidget->setCurrentIndex(1);
+    onStatusBarChanged(QString("Wybierz plik aby wygenerowac."));
 }
 
 void MainWindow::openFile()
@@ -57,7 +56,7 @@ void MainWindow::openFile()
 
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
                                                      "",
-                                                     tr("Graphic files (*.jpg *.png *.bmp);;All files (*.*)"));
+                                                     tr("Obrazki w skali szaroœci (*.jpg *.png *.bmp);;Wszystkie pliki (*.*)"));
     try
     {
         if (!fileName.isEmpty())
@@ -75,16 +74,45 @@ void MainWindow::openFile()
 
 void MainWindow::saveFile()
 {
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Save as image..."), QDir::homePath(), tr("PNG Image Files (*.png)"));
-    imageCpy->save(fileName, "PNG");
+    imageToSave = imageOrg;
+
+    StereogramGenerator *generatedToSave = new StereogramGenerator();
+    generatedToSave->changeDefault(ui->comboBox_DPI->currentIndex(),ui->comboBox_RozstawOczu->currentIndex());
+    generatedToSave->setImage(imageToSave);
+    generatedToSave->generate(ui->comboBox_DPI->currentIndex(),ui->comboBox->currentIndex(),ui->checkBox->checkState(),ui->comboBox_rozdzielczosc->currentIndex(),ui->checkBox_keepAspectRatio->checkState());
+    imageToSave = generatedToSave->getImage();
+
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Zapisz stereogram jako obrazek..."), QDir::homePath(), tr("JPG (*.jpg);;PNG(*.png);;BMP (*.bmp)"));
+
+    if(fileName.endsWith(".png"))
+        imageToSave->save(fileName, "PNG");
+    else if(fileName.endsWith(".bmp"))
+        imageToSave->save(fileName, "BMP");
+    else
+        imageToSave->save(fileName, "JPG");
+
+    delete generatedToSave;
+
+    if(fileName.isEmpty())
+        onStatusBarChanged(QString("Anulowano"));
+    else
+        onStatusBarChanged(QString("Zapisano. | ")+fileName);
 }
 
-void MainWindow::update()
+void MainWindow::update(bool dopasuj)
 {
-    scaledImage = imageCpy->scaled(ui->label->width(),ui->label->height(),Qt::KeepAspectRatio);
-    ui->label->setPixmap(QPixmap::fromImage(scaledImage,Qt::AutoColor));
-    scaledImage = imageCpy->scaled(ui->label_game->width(),ui->label_game->height(),Qt::KeepAspectRatio);
-    ui->label_game->setPixmap(QPixmap::fromImage(scaledImage,Qt::AutoColor));
+    if(dopasuj)
+    {
+        scaledImage = imageCpy->scaled(ui->label->width(),ui->label->height(),Qt::KeepAspectRatio);
+        ui->label->setPixmap(QPixmap::fromImage(scaledImage,Qt::AutoColor));
+        scaledImage = imageCpy->scaled(ui->label_game->width(),ui->label_game->height(),Qt::KeepAspectRatio);
+        ui->label_game->setPixmap(QPixmap::fromImage(scaledImage,Qt::AutoColor));
+    }
+    else
+    {
+        scaledImage = imageCpy->scaled(imageCpy->size(),Qt::KeepAspectRatio);
+        ui->label->setPixmap(QPixmap::fromImage(scaledImage,Qt::AutoColor));
+    }
 }
 
 bool MainWindow::wczytajPlik(QString fileName)
@@ -97,7 +125,7 @@ bool MainWindow::wczytajPlik(QString fileName)
     setLabel_info(imageCpy->width(),imageCpy->height(),file.size(),imageCpy->allGray());
 
     _stereogramGenerator.setImage(imageCpy);
-    _stereogramGenerator.generate(1,ui->comboBox->currentIndex(),ui->checkBox->checkState());
+    _stereogramGenerator.generate(ui->checkBox_wkleslosc->checkState(),ui->comboBox->currentIndex(),ui->checkBox->checkState());
 
     imageCpy = _stereogramGenerator.getImage();
 
@@ -149,7 +177,7 @@ ui->stackedWidget->setSizeIncrement(ui->centralWidget->width(),ui->centralWidget
     if(wczytano || (ui->stackedWidget->currentIndex()==3))
     {
 
-        update();
+        update(ui->checkBox_dopasujDoOkna->isChecked());
     }
 }
 
@@ -159,7 +187,7 @@ void MainWindow::on_checkBox_clicked()
 {
     _stereogramGenerator.generate(ui->checkBox_wkleslosc->checkState(),ui->comboBox->currentIndex(),ui->checkBox->checkState());
     imageCpy = _stereogramGenerator.getImage();
-    update();
+    update(ui->checkBox_dopasujDoOkna->isChecked());
 }
 
 void MainWindow::on_pushButton_Open_clicked()
@@ -441,7 +469,7 @@ void MainWindow::on_comboBox_activated(int index)
 {
     _stereogramGenerator.generate(1,index,ui->checkBox->checkState());
     imageCpy = _stereogramGenerator.getImage();
-    update();
+    update(ui->checkBox_dopasujDoOkna->isChecked());
 }
 
 /** @brief Wybor zakladki 'o programie' z menu glownego.
@@ -461,22 +489,28 @@ void MainWindow::on_pushButton_oprogramie_menu_clicked()
 void MainWindow::on_comboBox_DPI_activated(int index)
 {
     _stereogramGenerator.changeDefault(index,ui->comboBox_RozstawOczu->currentIndex());
-    _stereogramGenerator.generate(1,ui->comboBox->currentIndex(),ui->checkBox->checkState());
+    _stereogramGenerator.generate(ui->checkBox_wkleslosc->checkState(),ui->comboBox->currentIndex(),ui->checkBox->checkState());
     imageCpy = _stereogramGenerator.getImage();
-    update();
+    update(ui->checkBox_dopasujDoOkna->isChecked());
 }
 
 void MainWindow::on_comboBox_RozstawOczu_activated(int index)
 {
     _stereogramGenerator.changeDefault(ui->comboBox_DPI->currentIndex(),index);
-    _stereogramGenerator.generate(1,ui->comboBox->currentIndex(),ui->checkBox->checkState());
+    _stereogramGenerator.generate(ui->checkBox_wkleslosc->checkState(),ui->comboBox->currentIndex(),ui->checkBox->checkState());
     imageCpy = _stereogramGenerator.getImage();
-    update();
+    update(ui->checkBox_dopasujDoOkna->isChecked());
 }
 
 void MainWindow::on_checkBox_wkleslosc_clicked()
 {
     _stereogramGenerator.generate(ui->checkBox_wkleslosc->checkState(),ui->comboBox->currentIndex(),ui->checkBox->checkState());
     imageCpy = _stereogramGenerator.getImage();
-    update();
+    update(ui->checkBox_dopasujDoOkna->isChecked());
+}
+
+
+void MainWindow::on_checkBox_dopasujDoOkna_clicked()
+{
+    update(ui->checkBox_dopasujDoOkna->isChecked());
 }

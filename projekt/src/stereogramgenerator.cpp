@@ -14,7 +14,6 @@ StereogramGenerator::~StereogramGenerator()
     if(_wygenerowano)
     {
         delete _imageGeneratedStereogram;
-        //delete _imageToGenerate;
     }
 }
 
@@ -85,36 +84,41 @@ int StereogramGenerator::separateSomething(double something)
 //#define separation(Z) round((1-_depthOfField*Z)*_eyeSeparation/(2-_depthOfField*Z))        /* Stereo separation corresponding to position Z */
 //#define _farOfDots separation(0)                               /* ... and corresponding to _farOfDots plane, Z=0 */
 
-void StereogramGenerator::generate(int convex, int color, bool circles, int size)
+void StereogramGenerator::generate(int convex, int color, bool circles, int size, int keepAspectRatio)
 {
     if(_wygenerowano)
+    {
         delete _imageGeneratedStereogram;
+    }
+
+    _imageCopy = _imageToGenerate;
+
+    Qt::AspectRatioMode aspectModel;
+    if(keepAspectRatio!=0)
+        aspectModel = Qt::KeepAspectRatio;
+    else
+        aspectModel = Qt::IgnoreAspectRatio;
 
     switch(size)
     {
-        case 0:
-            _imageToGenerate->scaled(800,600);
-        break;
-        case 1:
-            _imageToGenerate->scaled(1024,768);
-        break;
-        case 2:
-            _imageToGenerate->scaled(1280,720);
-        break;
-        case 3:
-            _imageToGenerate->scaled(1920,1080);
+        case 0:     *_imageCopy = _imageToGenerate->scaled(QSize(800,600),aspectModel);         break;
+        case 1:     *_imageCopy = _imageToGenerate->scaled(QSize(1024,768),aspectModel);        break;
+        case 2:     *_imageCopy = _imageToGenerate->scaled(1280,720,aspectModel);               break;
+        case 3:     *_imageCopy = _imageToGenerate->scaled(1920,1080,aspectModel);              break;
         case 4:
-        break;
-        default:
             if(_imageToGenerate->height() >= 720)
-                *_imageToGenerate = _imageToGenerate->scaledToHeight(720);
+                *_imageCopy = _imageToGenerate->scaledToHeight(720);
             else if(_imageToGenerate->width()>= 1280)
-                *_imageToGenerate = _imageToGenerate->scaledToWidth(1280);
+                *_imageCopy = _imageToGenerate->scaledToWidth(1280);
         break;
+        default:    _imageCopy = _imageToGenerate;      break;
     }
 
-    _widthOfImage_X = _imageToGenerate->width();
-    _heightOfImage_Y = _imageToGenerate->height();
+    _widthOfImage_X = _imageCopy->width();
+    _heightOfImage_Y = _imageCopy->height();
+
+//    qDebug() << "size" << size;
+//    qDebug() << _widthOfImage_X << " " << _heightOfImage_Y;
 
     _imageGeneratedStereogram = new QImage(_widthOfImage_X,_heightOfImage_Y,QImage::Format_RGB32);
 
@@ -190,63 +194,25 @@ void StereogramGenerator::generate(int convex, int color, bool circles, int size
 
             switch (color)
             {
-            case 0:
-                _imageGeneratedStereogram->setPixel(x, y, pix[x]*16775930); /* White */
-                break;
-            case 1:
-                _imageGeneratedStereogram->setPixel(x, y, pix[x]*14210000); /* Gray */
-                break;
-            case 2:
-                _imageGeneratedStereogram->setPixel(x, y, pix[x]*11500000); /* Purple */
-                break;
-            case 3:
-                _imageGeneratedStereogram->setPixel(x, y, pix[x]*11800000); /* Violet */
-                break;
-            case 4:
-                _imageGeneratedStereogram->setPixel(x, y, pix[x]*14245000); /* Pink */
-                break;
-            case 5:
-                _imageGeneratedStereogram->setPixel(x, y, pix[x]*14300000); /* Scarlet */
-                break;
-            case 6:
-                _imageGeneratedStereogram->setPixel(x, y, pix[x]*16000000); /* Red */
-                break;
-            case 7:
-                _imageGeneratedStereogram->setPixel(x, y, pix[x]*14250000); /* Orange */
-                break;
-            case 8:
-                _imageGeneratedStereogram->setPixel(x, y, pix[x]*9000000); /* Brown */
-                break;
-            case 9:
-                _imageGeneratedStereogram->setPixel(x, y, pix[x]*14272000); /* Yellow */
-                break;
-            case 10:
-                _imageGeneratedStereogram->setPixel(x, y, pix[x]*9300000); /* Pistachio */
-                break;
-            case 11:
-                _imageGeneratedStereogram->setPixel(x, y, pix[x]*125000); /* Green */
-                break;
-            case 12:
-                _imageGeneratedStereogram->setPixel(x, y, pix[x]*1830000); /* Sea green */
-                break;
-            case 13:
-                _imageGeneratedStereogram->setPixel(x, y, pix[x]*1900000); /* Sky blue */
-                break;
-            case 14:
-                _imageGeneratedStereogram->setPixel(x, y, pix[x]*300000); /* Indigo */
-                break;
-            case 15:
-                _imageGeneratedStereogram->setPixel(x, y, pix[x]*255); /* Blue */
-                break;
-            case 16:
-                _imageGeneratedStereogram->setPixel(x, y, pix[x]*16000000/_imageToGenerate->width()*x); /* Multi-color columns */
-                break;
-            case 17:
-                _imageGeneratedStereogram->setPixel(x, y, pix[x]*16000000/_imageToGenerate->height()*y); /* Multi-color rows */
-                break;
-            default:
-                _imageGeneratedStereogram->setPixel(x, y, pix[x]*16775930); /* White */
-                break;
+                case 0:     _imageGeneratedStereogram->setPixel(x, y, pix[x]*16775930); /* White */         break;
+                case 1:     _imageGeneratedStereogram->setPixel(x, y, pix[x]*14210000); /* Gray */          break;
+                case 2:     _imageGeneratedStereogram->setPixel(x, y, pix[x]*11500000); /* Purple */        break;
+                case 3:     _imageGeneratedStereogram->setPixel(x, y, pix[x]*11800000); /* Violet */        break;
+                case 4:     _imageGeneratedStereogram->setPixel(x, y, pix[x]*14245000); /* Pink */          break;
+                case 5:     _imageGeneratedStereogram->setPixel(x, y, pix[x]*14300000); /* Scarlet */       break;
+                case 6:     _imageGeneratedStereogram->setPixel(x, y, pix[x]*16000000); /* Red */           break;
+                case 7:     _imageGeneratedStereogram->setPixel(x, y, pix[x]*14250000); /* Orange */        break;
+                case 8:     _imageGeneratedStereogram->setPixel(x, y, pix[x]*9000000); /* Brown */          break;
+                case 9:     _imageGeneratedStereogram->setPixel(x, y, pix[x]*14272000); /* Yellow */        break;
+                case 10:    _imageGeneratedStereogram->setPixel(x, y, pix[x]*9300000); /* Pistachio */      break;
+                case 11:    _imageGeneratedStereogram->setPixel(x, y, pix[x]*125000); /* Green */           break;
+                case 12:    _imageGeneratedStereogram->setPixel(x, y, pix[x]*1830000); /* Sea green */      break;
+                case 13:    _imageGeneratedStereogram->setPixel(x, y, pix[x]*1900000); /* Sky blue */       break;
+                case 14:    _imageGeneratedStereogram->setPixel(x, y, pix[x]*300000); /* Indigo */          break;
+                case 15:    _imageGeneratedStereogram->setPixel(x, y, pix[x]*255); /* Blue */               break;
+                case 16:    _imageGeneratedStereogram->setPixel(x, y, pix[x]*16000000/_imageCopy->width()*x); /* Multi-color columns */ break;
+                case 17:    _imageGeneratedStereogram->setPixel(x, y, pix[x]*16000000/_imageCopy->height()*y); /* Multi-color rows */   break;
+                default:    _imageGeneratedStereogram->setPixel(x, y, pix[x]*16775930); /* White */         break;
             }
         }
 
@@ -274,11 +240,11 @@ void StereogramGenerator::calculateImageDepth(double **imageDepth, int convex)
     else
         tmp=-1.0;
 
-    for(int x=0;x<_imageToGenerate->width();++x)
+    for(int x=0;x<_imageCopy->width();++x)
     {
-        for(int y=0;y<_imageToGenerate->height();++y)
+        for(int y=0;y<_imageCopy->height();++y)
         {
-            imageDepth[x][y] = ((double)(convex - (qGray(_imageToGenerate->pixel(x,y))/255.0)*tmp));
+            imageDepth[x][y] = ((double)(convex - (qGray(_imageCopy->pixel(x,y))/255.0)*tmp));
         }
     }
 }

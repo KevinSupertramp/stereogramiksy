@@ -153,7 +153,7 @@
                  <item>
                   <widget class="QCheckBox" name="checkBox_wkleslosc">
                    <property name="text">
-                    <string>odwróć wklęsłość</string>
+                    <string>Odwróć wklęsłość</string>
                    </property>
                    <property name="checked">
                     <bool>true</bool>
@@ -265,17 +265,31 @@
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="label_info">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="text">
-                 <string/>
-                </property>
-               </widget>
+               <layout class="QVBoxLayout" name="verticalLayout_166">
+                <item>
+                 <widget class="QLabel" name="label_info">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="checkBox_dopasujDoOkna">
+                  <property name="text">
+                   <string>dopasuj do rozmiaru okna</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
               </item>
               <item>
                <spacer name="horizontalSpacer">
@@ -414,18 +428,18 @@ p, li { white-space: pre-wrap; }
                    </property>
                   </widget>
                  </item>
+                 <item>
+                  <widget class="QPushButton" name="pushButton_Save">
+                   <property name="text">
+                    <string>Zapisz jako</string>
+                   </property>
+                  </widget>
+                 </item>
                 </layout>
                </widget>
               </item>
               <item>
                <layout class="QVBoxLayout" name="verticalLayout_13">
-                <item>
-                 <widget class="QPushButton" name="pushButton_Save">
-                  <property name="text">
-                   <string>Zapisz jako</string>
-                  </property>
-                 </widget>
-                </item>
                 <item>
                  <widget class="QLabel" name="label_rozdzielczosc">
                   <property name="sizePolicy">
@@ -442,7 +456,7 @@ p, li { white-space: pre-wrap; }
                 <item>
                  <widget class="QComboBox" name="comboBox_rozdzielczosc">
                   <property name="currentIndex">
-                   <number>4</number>
+                   <number>0</number>
                   </property>
                   <item>
                    <property name="text">
@@ -464,11 +478,16 @@ p, li { white-space: pre-wrap; }
                     <string>1920 × 1080</string>
                    </property>
                   </item>
-                  <item>
-                   <property name="text">
-                    <string>Oryginalna rozdzielczość</string>
-                   </property>
-                  </item>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="checkBox_keepAspectRatio">
+                  <property name="text">
+                   <string>Keep aspect ratio</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
                  </widget>
                 </item>
                </layout>

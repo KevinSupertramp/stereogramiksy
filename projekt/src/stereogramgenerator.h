@@ -16,7 +16,7 @@ public:
         inline      void setImage(QImage *img){_imageToGenerate = img;}
         inline      QImage* getImage(){return _imageGeneratedStereogram;}
 
-        void        generate(int convex, int color=false, bool circles=false, int size=5);
+        void        generate(int convex, int color=false, bool circles=false, int size=4, int keepAspectRatio=true);
         void        setDefault(int DPI, double distanceBetweenEyes);
         void        changeDefault(int currentDPI, int currentDistanceBetweenEyes);
 
@@ -33,6 +33,7 @@ public:
         int         separateSomething(double something);
 
         QImage      *_imageToGenerate;
+        QImage      *_imageCopy;
         QImage      *_imageGeneratedStereogram;
         int         _widthOfImage_X;
         int         _heightOfImage_Y;
