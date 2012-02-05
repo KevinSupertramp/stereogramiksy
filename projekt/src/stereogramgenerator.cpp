@@ -138,46 +138,77 @@ void StereogramGenerator::generate(int convex, int color, bool circles, int size
         unsigned int colorOfPixel[_widthOfImage_X];
 
         /// tablica pixeli, które wskazuj¹ na te pixele
-        /// które po prawej stronie maj¹ mieæ wymuszony dany kolor ( czarny lub bia³y )
+        /// które maj¹ mieæ wymuszony dany kolor ( czarny lub bia³y )
         /// [ wszystko w zale¿noœci od tego, czy posiadamy informacjê na temat "g³êbokoœci" danego pixela ]
         int samePixels[_heightOfImage_Y];
 
         /// punkt - przechowuje informacje na temat rozdzielenia
-        /// dwóch identycznych pixeli bêd¹cych
+        /// dwóch identycznych pixeli odpowiadaj¹cych rodzieleniu "stereo" tych punktów
+        /// @note rozdzielenie "stereo" efekt wizualny - wykorzystywany do generowania stereogramów
         int stereoSeparationOfPoint;
+
+        /// "lewy" i "prawy" pixel
+        /// musz¹ byæ tego samego koloru
+        /// - odpowiadaj¹ pixelowi widocznemu przez lewe i analogicznie prawe oko
         int leftEye, rightEye;
 
+        /// inicjalizacja tablicy pixeli samePixels
+        /// pocz¹tkowo przypisujemy pixelom ich w³asne wartoœci
         for(int x=0;x<_widthOfImage_X;++x)
             samePixels[x]=x;
 
+        ///
         for(int x=0;x<_widthOfImage_X;++x)
         {
+            /// przypisanie - rozdzielenie dwóch punktów
             stereoSeparationOfPoint = separateSomething(imageDepth[x][y]);
 
+            /// przypisanie wartoœci do zmiennych przechowuj¹cych
+            /// informacje o pixelu lewym i prawym
+            /// - pixel lewy jak i pixel prawy musz¹ byæ takie same ( albo przynajmniej powinny takie byæ ... )
             leftEye = x - stereoSeparationOfPoint/2;
             rightEye = leftEye + stereoSeparationOfPoint;
 
+            /// dalsza czêœæ algorytmu
+            /// - usuwanie niewidocznych powierzchni
             if(0 <= leftEye && rightEye < _widthOfImage_X)
             {
-                int isVisible;                                        /* First, perform hidden-surface removal */
-                int tmp=1;                                            /* We will check the points (x-tmp,y) and (x+tmp,y) */
-                float rayOfImageDepthAtPoint;                                           /* Z-coord of ray at these two points */
+                /// zmienna odpowiedzialana za usuwanie niewidocznych ( ukrytych ) powie¿chni
+                int isVisible;
 
+                /// zmienna tymczasowa, porz¹dkuj¹ca kod i alorytm
+                /// [ bêdziemy sprawdzaæ pixele x+tmp i x-tmp - czy nie s¹ zakryte, b¹dŸ takie same ]
+                int tmp=1;
+
+                /// zmienna przechowuj¹ca wartoœæ odleg³oœci od "œciany" stereogramu
+                /// zale¿nie od wartoœci imageDepth - czyli g³êbi na skali szaroœci
+                float rayOfImageDepthAtPoint;
+
+                /// pêtla odpowiadaj¹ca za przejœcie i usuniêcie wszystkich ukrytych powierzni
                 do
                 {
-                                                                                            /* False if obscured */
+                    /// implementacja wzoru wyliczaj¹cego odleg³oœci ( promieñ )
                     rayOfImageDepthAtPoint = imageDepth[x][y] + 2*(2 - _depthOfField*imageDepth[x][y])*tmp/(_depthOfField*_eyeSeparation);
-                    isVisible = imageDepth[x-tmp][y] < rayOfImageDepthAtPoint && imageDepth[x+tmp][y] < rayOfImageDepthAtPoint;             /* False if obscured */
 
+                    /// jeœli dany pixel jest zas³oniêty to isVisible = 0
+                    isVisible = imageDepth[x-tmp][y] < rayOfImageDepthAtPoint && imageDepth[x+tmp][y] < rayOfImageDepthAtPoint;
+
+                    /// postinkrementacja tmp
+                    /// - bêdziemy sprawdzaæ dla kolejnych s¹siednich pixeliczy siê pokrywaj¹
                     tmp++;
                 }
-                while (isVisible && rayOfImageDepthAtPoint < 1);                        /*  Done hidden-surface removal  ... */
+                while (isVisible && rayOfImageDepthAtPoint < 1);
 
+                /// sprawdzamy czy pixele s¹ takie same - jeœli s¹ widoczne
                 if (isVisible)
-                {                                      /*  ... so record the fact that pixels at */
-                    int left_N_right = samePixels[leftEye];                                 /* ... leftEye and rightEye are the samePixels */
+                {
+                    int left_N_right = samePixels[leftEye];
                     while (left_N_right != leftEye && left_N_right != rightEye)
                     {
+                        /// nastêpnie porównujemy pixele
+                        /// do momentu a¿ samePixels[leftEye] = leftEye
+                        /// lub samePixels[leftEye] = rightEye
+                        /// jeœli nie s¹ - zamieniamy je miejscami
                         if (left_N_right > rightEye)
                         {
                             samePixels[leftEye] = rightEye;
@@ -186,13 +217,14 @@ void StereogramGenerator::generate(int convex, int color, bool circles, int size
                             rightEye = left_N_right;
                         }
                         else
-                        {                                                                   /* But first, juggle the pointers ... */
-                            leftEye = left_N_right;                                           /* ... until either samePixels[leftEye]=leftEye */
-                            left_N_right = samePixels[leftEye];                                     /* ... or samePixels[leftEye]=rightEye */
+                        {
+                            leftEye = left_N_right;
+                            left_N_right = samePixels[leftEye];
                         }
                     }
 
-                samePixels[leftEye] = rightEye; /* This is where we actually record it */
+                /// odnotowujemy fakt, ¿e pixele s¹ takie same
+                samePixels[leftEye] = rightEye;
                 }
             }
         }
@@ -201,9 +233,13 @@ void StereogramGenerator::generate(int convex, int color, bool circles, int size
         /// ostatnia pêtla po ktorej odpowiednim pixelom
         /// zostaje nadany kolor
         for (int x=_widthOfImage_X-1 ; x>= 0 ; x--)
-        {                                   /*  Now set the pixels on this scan line */
-            if (samePixels[x] == x) colorOfPixel[x] = qrand()&1;/* Free choice; do it randomly */
-            else colorOfPixel[x] = colorOfPixel[samePixels[x]]; /* Constrained choice; obey constraint */
+        {
+            /// losowo nadajemy im wartoœci
+            /// zamiarem algorytmu jest uzyskanie koloru czarnego lub bia³ego
+            /// dok³aniej dwóch ró¿nych kontrastowych kolorów
+            /// - czarny powinien zostaæ
+            if (samePixels[x] == x) colorOfPixel[x] = qrand()&1;
+            else colorOfPixel[x] = colorOfPixel[samePixels[x]];
 
             /// switch odpowiedzialny za nadanie innego koloru stereogramowi ( ni¿ bia³y )
             /// - poprzez wybranie odpowiedniej wartosci color przez uzytkowika
