@@ -382,6 +382,9 @@ void MainWindow::on_pushButton_Scenariusz_clicked()
     QStringListModel *model;
     model = new QStringListModel(fileListScen);
     ui->listView_scen_file->setModel(model);
+    ui->listView_scen2_hasla->setModel(model);
+    ui->lineEdit_scen2_haslo->setText("");
+    ui->lineEdit_scen2_tytul->setText("");
     onStatusBarChanged("Dodaj obrazki do swojej gry.");
 }
 
