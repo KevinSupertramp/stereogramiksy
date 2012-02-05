@@ -1055,7 +1055,7 @@ p, li { white-space: pre-wrap; }
              </font>
             </property>
             <property name="text">
-             <string>Program Stereogramiksy Wersja 1.2 stworzony do generowania obrazaów sprawiających wrażenie obrazów 3d</string>
+             <string>Program Stereogramiksy Wersja 1.2 stworzony do generowania obrazów sprawiających wrażenie obrazów 3d</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
