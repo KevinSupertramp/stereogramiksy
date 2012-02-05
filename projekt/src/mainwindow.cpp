@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(&_stereogramGenerator,SIGNAL(setStatusBarLabel(QString)),this,SLOT(onStatusBarChanged(QString)));
 
-    onStatusBarChanged(QString("Witaj w programie Stereogramiksy."));
+    onStatusBarChanged("");
 
     ui->pushButton_Koniec->setIcon(QIcon(":new/icon/exit.png"));
     ui->pushButton_Open->setIcon(QIcon(":new/icon/Open.png"));
@@ -223,6 +223,7 @@ void MainWindow::on_pushButton_Koniec_clicked()
 void MainWindow::on_pushButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(0);
+    onStatusBarChanged("");
 }
 
 /** @brief Wybor zakladki 'Gra' z menu glownego programu.
@@ -269,7 +270,7 @@ void MainWindow::on_pushButton_wg_Graj_clicked()
 void MainWindow::on_pushButton_wg_Menu_clicked()
 {
     ui->stackedWidget->setCurrentIndex(0);
-    onStatusBarChanged("");
+    onStatusBarChanged(QString("Witaj w programie Stereogramiksy."));
 }
 
 
@@ -478,7 +479,7 @@ void MainWindow::on_pushButton_scen2_ok_clicked()
 
     file2.close();
     ui->stackedWidget->setCurrentIndex(0);
-    onStatusBarChanged("Scenariusz stworzony. MOzesz grac!");
+    onStatusBarChanged("Scenariusz stworzony. Mozesz grac!");
 }
 
 void MainWindow::on_comboBox_activated(int index)
@@ -492,12 +493,14 @@ void MainWindow::on_comboBox_activated(int index)
 void MainWindow::on_pushButton_Oprogramie_clicked()
 {
     ui->stackedWidget->setCurrentIndex(7);
+    onStatusBarChanged("Wprowadz nazwe swojej gry");
 }
 
 
 void MainWindow::on_pushButton_oprogramie_menu_clicked()
 {
     ui->stackedWidget->setCurrentIndex(0);
+    onStatusBarChanged("");
 }
 
 void MainWindow::on_comboBox_DPI_activated(int index)

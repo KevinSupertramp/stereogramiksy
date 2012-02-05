@@ -126,27 +126,84 @@ public:
          */
         int         roundSomething(double something);
 
-//        /**
-//         * separateSomething - funkcja separuj¹ca ( rozdzielaj¹ca ) odpowiadaj¹ca pozycji something
-//         * @param something - pozycja
-//         * @see generate();
-//         * @see roundSomething();
-//         * @return int - zwraca rozdzielon¹ liczbê
-//         */
+        /**
+         * separateSomething - funkcja ( rozdzielaj¹ca ) pozycjê, pobiera wartoœæ pixela w skali szaroœci
+         * a nastêpnie zwraca odleg³oœæ w jakiej powinien znaleŸæ od "œciany" obrazka
+         * @param something - pozycja
+         * @see generate();
+         * @see roundSomething();
+         * @return int - zwraca rozdzielon¹ liczbê
+         */
         int         separateSomething(double something);
 
+        /**
+          * Zmienna _imageToGenerate - przechowuje obrazek, z którego bêdzie generowany stereogram
+          * Zmienna prywatna.
+          */
         QImage      *_imageToGenerate;
+
+        /**
+          * Zmienna _imageCopy - przechowuje kopiê oryginanego obrazka ( na potrzeby zmieny rozmiaru itd. )
+          * Zmienna prywatna.
+          */
         QImage      *_imageCopy;
+
+        /**
+          * Zmienna _imageGeneratedStereogram - przechowuje wygerowany stereogram
+          * Zmienna prywatna.
+          */
         QImage      *_imageGeneratedStereogram;
+
+        /**
+          * Zmienna _widthOfImage_X - przechowuje szerokoœæ ( w pixelach ) przeskalowanego obrazka ( generowanego stereogramu )
+          * Zmienna prywatna.
+          */
         int         _widthOfImage_X;
+
+        /**
+          * Zmienna _widthOfImage_X - przechowuje wykosoœæ ( w pixelach )  przeskalowanego obrazka ( generowanego stereogramu )
+          * Zmienna prywatna.
+          */
         int         _heightOfImage_Y;
 
+
+        /**
+          * Zmienna _wygenerowano - true jeœli wczytano obrazek - pomaga w zarz¹dzaniu pamiêci¹
+          * Zmienna prywatna.
+          */
         bool        _wygenerowano;
 
+
+        /**
+          * Zmienna _distanceBetweenEyes - odleg³oœæ miêdzy oczami ( w calach )
+          * Zmienna prywatna.
+          */
         double      _distanceBetweenEyes;
+
+        /**
+          * Zmienna _DPI - DPI ekranu, zmienna mo¿e byæ zmieniona przez u¿ytkownika, domyœlnie 96
+          * Zmienna prywatna.
+          */
         double      _DPI;
+
+        /**
+          * Zmienna _depthOfField - g³êbia widzialnego pola, u³amek ( 1/3 ) z widzialnego dystansu
+          * Zmienna prywatna.
+          */
         double      _depthOfField;
+
+        /**
+          * Zmienna _eyeSeparation - zmienna odpowiadaj¹ca rozdzieleniu "oczu", pola widzialnego
+          * zale¿na od _distanceBetweenEyes oraz _DPI
+          * _eyeSeparation = roundSomething(_distanceBetweenEyes*_DPI)
+          * Zmienna prywatna.
+          */
         int         _eyeSeparation;
+
+        /**
+          * Zmienna  _farOfDots - wykorzystywana przy rysowaniu pomocniczych kropek - wyznacza ich odleg³oœæ
+          * Zmienna prywatna.
+          */
         int         _farOfDots;
 };
 
