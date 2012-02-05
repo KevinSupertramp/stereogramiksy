@@ -60,14 +60,6 @@ int StereogramGenerator::separateSomething(double something)
     return roundSomething((1-_depthOfField*something)*_eyeSeparation/(2-_depthOfField*something));
 }
 
-                                                        /* Algorithm for drawing an autostereogram  */
-//#define round(X) (int)((X)+0.5)                         /* Often need to round rather than truncate */
-//#define DPI 96                                          /* Output device has 72 pixels per inch */
-//#define _eyeSeparation round(2.7*DPI)                                /* Eye separation is assumed to be 2.5 in */
-//#define _depthOfField (1/3.0)                           /* Depth of field (fraction of viewing distance) */
-//#define separation(Z) round((1-_depthOfField*Z)*_eyeSeparation/(2-_depthOfField*Z))        /* Stereo separation corresponding to position Z */
-//#define _farOfDots separation(0)                               /* ... and corresponding to _farOfDots plane, Z=0 */
-
 void StereogramGenerator::generate(int convex, int color, bool circles, int size, int keepAspectRatio)
 {
     /// czyszczenie pamiêci jeœli obrazek jakiœ obrazek zosta³ ju¿ wczytany
