@@ -77,16 +77,35 @@ public:
     ~MainWindow();
 
 private slots:
+
+    /** @brief funkcja odpowiadaj¹ca za wœwietlenie na labelu informaji o wczytanym obrazku
+      * @return void
+     */
     void setLabel_info(int w, int h, float size, bool allgray);
 
+    /** @brief funkcja odpowiadaj¹ca za wœwietlenie na status barze aktulanych informacji/podpowiedzi
+      * @return void
+     */
     void onStatusBarChanged(QString tmp);
 
+    /** @brief funkcja ob³usuj¹ca przycisk przenosz¹cy u¿ytkownika do odpowiedniej generowania stereogramu
+      * @return void
+     */
     void on_pushButton_Generate_clicked();
 
+    /** @brief funkcja ob³usuj¹ca przycisk otwieraj¹cy OpenFileDialog
+      * @return void
+     */
     void on_pushButton_Open_clicked();
 
+    /** @brief funkcja ob³usuj¹ca przycisk zamykaj¹cy program
+      * @return void
+     */
     void on_pushButton_Koniec_clicked();
 
+    /** @brief funkcja ob³usuj¹ca przycisk powracaj¹cy do g³ownego menu z zak³adki generowanie stereogramu
+      * @return void
+     */
     void on_pushButton_clicked();
 
     /** @brief Wybor zakladki 'Gra' z menu glownego programu.
@@ -94,6 +113,9 @@ private slots:
      */
     void on_pushButton_Games_clicked();
 
+    /** @brief funkcja ob³usuj¹ca przycisk otwieraj¹cy SaveFileDialog - zapisuje obrazek
+      * @return void
+     */
     void on_pushButton_Save_clicked();
 
     /** @brief W zakladce wyboru gier wybieramy gre w ktora chcemy zagrac.
@@ -110,8 +132,14 @@ private slots:
      */
     void on_pushButton_game_Ok_clicked();
 
+    /** @brief funkcja ob³usuj¹ca przycisk powracaj¹cy do g³ownego menu z zak³adki z wynikami gry
+      * @return void
+     */
     void on_pushButton_2_end_menu_clicked();
 
+    /** @brief funkcja ob³usuj¹ca check odpowiedzialny za wygenerowanie stereogramu z pomocniczymi kropkami
+      * @return void
+     */
     void on_checkBox_clicked();
 
     /** @brief Wybor zakladki 'Stworz scenariusz' w menu glownym.
@@ -149,6 +177,9 @@ private slots:
      */
     void on_pushButton_scen2_ok_clicked();
 
+    /** @brief funkcja ob³usuj¹ca combobox odpowiedzialny za zmianê kolorów na stereogramie
+      * @return void
+     */
     void on_comboBox_activated(int index);
 
     /** @brief Wybor zakladki 'o programie' z menu glownego.
@@ -161,12 +192,24 @@ private slots:
      */
     void on_pushButton_oprogramie_menu_clicked();
 
+    /** @brief funkcja ob³usuj¹ca combobox odpowiedzialny za zmianê DPI generowanego stereogramu
+      * @return void
+     */
     void on_comboBox_DPI_activated(int index);
 
+    /** @brief funkcja ob³usuj¹ca combobox odpowiedzialny za rozstawu oczu generowanego stereogramu
+      * @return void
+     */
     void on_comboBox_RozstawOczu_activated(int index);
 
+    /** @brief funkcja ob³usuj¹ca checkbox odpowiedzialny za zmianê "wklês³oœci" stereogramu - wiêcej w dokumentacji.
+      * @return void
+     */
     void on_checkBox_wkleslosc_clicked();
 
+    /** @brief funkcja ob³usuj¹ca checkbox odpowiedzialny za to czy obrazek ma siê dopasowywaæ do okna czy te¿ pozostaæ w oryginalnym kszta³cie
+      * @return void
+     */
     void on_checkBox_dopasujDoOkna_clicked();
 
 private:

@@ -5,6 +5,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+//    ui->widget->setWindowIcon(QIcon(":new/icon/stereo.png"));
     wczytano = false;
     ui->setupUi(this);
     ui->stackedWidget->setCurrentIndex(0);

@@ -70,19 +70,25 @@ int StereogramGenerator::separateSomething(double something)
 
 void StereogramGenerator::generate(int convex, int color, bool circles, int size, int keepAspectRatio)
 {
+    /// czyszczenie pamiêci jeœli obrazek jakiœ obrazek zosta³ ju¿ wczytany
     if(_wygenerowano)
     {
         delete _imageGeneratedStereogram;
     }
 
+    /// tworzenie kopii oryginalnego obrazka wczytanego do generatora
     _imageCopy = _imageToGenerate;
 
+    /// ustawienie odpowiedzialne za to czy generowany obrazek ma zachowaæ swoje proporcje b¹dŸ nie
     Qt::AspectRatioMode aspectModel;
     if(keepAspectRatio!=0)
         aspectModel = Qt::KeepAspectRatio;
     else
         aspectModel = Qt::IgnoreAspectRatio;
 
+    /// swotch odpowiadaj¹cy rozmiar w jakim dany obrazek bêdzie generowany
+    /// standardowo obrazek generowany ma rozmiar oko³o 1280x720
+    /// reszta opcji u¿ywna dopiero przy wywo³aniu opcji zapisu stereogramu
     switch(size)
     {
         case 0:     *_imageCopy = _imageToGenerate->scaled(QSize(800,600),aspectModel);         break;
@@ -98,28 +104,46 @@ void StereogramGenerator::generate(int convex, int color, bool circles, int size
         default:    _imageCopy = _imageToGenerate;      break;
     }
 
+    /// przypisanie zmiennym u¿ywanym w algorytmie generowania stereogramu, szerokoœci i wysokoœci obrazka
     _widthOfImage_X = _imageCopy->width();
     _heightOfImage_Y = _imageCopy->height();
 
-//    qDebug() << "size" << size;
-//    qDebug() << _widthOfImage_X << " " << _heightOfImage_Y;
-
+    /// zarezerwowanie pamiêci dla nowego ( na razie pustego obrazka ), który w przysz³oœci bêdzie stereogramem
     _imageGeneratedStereogram = new QImage(_widthOfImage_X,_heightOfImage_Y,QImage::Format_RGB32);
 
+    /// zarezwerwowanie pamiêci dla tablicy dwuwymiarowej[szerokoœæ][wykoœæ]
+    /// - w której bêd¹ przechowywane "g³êbokoœci" kolejnych pixeli
     double **imageDepth = 0;
     imageDepth = new double*[_widthOfImage_X];
     for(int i=0;i<_widthOfImage_X;++i)
         imageDepth[i] = new double[_heightOfImage_Y];
 
+    /// wywo³anie funkcji obliczaj¹cej "g³êbokoœæ" pixeli na skali szaroœci ( czarny 1, bia³y 0 ), im ciemniejszy tym bli¿ej nas
     calculateImageDepth(imageDepth,convex);
 
+    /// wys³anie do status bara, w g³ownym oknie aplikacji, wiadomoœci
     emit setStatusBarLabel("Generowanie");
 
+    /// pocz¹tek algorytmu generuj¹cego stereogramy
+    /// algorytm zaczerpniêty z "Displaying 3D Images: Algorithms for Single Image Random Dot Stereograms"
+    /// autorstwa: Harold W. Thimbleby, Stuart Inglis, Ian H. Witten
+    /// poni¿ej implementacja algorytmu
+    ///
+    /// przechodzimy po wszystkich pixelach, po pixelach poziomych
+    /// tak aby zastosowaæ algorytm do wszystkich linii oddzielnie
+    /// x,y wspó³rzêdne danego punktu ( pixela )
     for(int y=0;y<_heightOfImage_Y;++y)
     {
+        /// tablica kolorów danych pixeli
         unsigned int colorOfPixel[_widthOfImage_X];
+
+        /// tablica pixeli, które wskazuj¹ na te pixele
+        /// które po prawej stronie maj¹ mieæ wymuszony dany kolor ( czarny lub bia³y )
+        /// [ wszystko w zale¿noœci od tego, czy posiadamy informacjê na temat "g³êbokoœci" danego pixela ]
         int samePixels[_heightOfImage_Y];
 
+        /// punkt - przechowuje informacje na temat rozdzielenia
+        /// dwóch identycznych pixeli bêd¹cych
         int stereoSeparationOfPoint;
         int leftEye, rightEye;
 
@@ -153,17 +177,19 @@ void StereogramGenerator::generate(int convex, int color, bool circles, int size
                 {                                      /*  ... so record the fact that pixels at */
                     int left_N_right = samePixels[leftEye];                                 /* ... leftEye and rightEye are the samePixels */
                     while (left_N_right != leftEye && left_N_right != rightEye)
-                    if (left_N_right < rightEye)
-                    {                                    /* But first, juggle the pointers ... */
-                        leftEye = left_N_right;                                           /* ... until either samePixels[leftEye]=leftEye */
-                        left_N_right = samePixels[leftEye];                                     /* ... or samePixels[leftEye]=rightEye */
-                    }
-                    else
                     {
-                        samePixels[leftEye] = rightEye;
-                        leftEye = rightEye;
-                        left_N_right = samePixels[leftEye];
-                        rightEye = left_N_right;
+                        if (left_N_right > rightEye)
+                        {
+                            samePixels[leftEye] = rightEye;
+                            leftEye = rightEye;
+                            left_N_right = samePixels[leftEye];
+                            rightEye = left_N_right;
+                        }
+                        else
+                        {                                                                   /* But first, juggle the pointers ... */
+                            leftEye = left_N_right;                                           /* ... until either samePixels[leftEye]=leftEye */
+                            left_N_right = samePixels[leftEye];                                     /* ... or samePixels[leftEye]=rightEye */
+                        }
                     }
 
                 samePixels[leftEye] = rightEye; /* This is where we actually record it */
@@ -171,11 +197,16 @@ void StereogramGenerator::generate(int convex, int color, bool circles, int size
             }
         }
 
+        /// koñcowa czêœæ algorytmu
+        /// ostatnia pêtla po ktorej odpowiednim pixelom
+        /// zostaje nadany kolor
         for (int x=_widthOfImage_X-1 ; x>= 0 ; x--)
         {                                   /*  Now set the pixels on this scan line */
             if (samePixels[x] == x) colorOfPixel[x] = qrand()&1;/* Free choice; do it randomly */
             else colorOfPixel[x] = colorOfPixel[samePixels[x]]; /* Constrained choice; obey constraint */
 
+            /// switch odpowiedzialny za nadanie innego koloru stereogramowi ( ni¿ bia³y )
+            /// - poprzez wybranie odpowiedniej wartosci color przez uzytkowika
             switch (color)
             {
                 case 0:     _imageGeneratedStereogram->setPixel(x, y, colorOfPixel[x]*16775930); /* White */         break;
@@ -200,30 +231,44 @@ void StereogramGenerator::generate(int convex, int color, bool circles, int size
             }
         }
 
+        /// wys³anie za ka¿dym przebiegiem pêtli postêp jaki zosta³ wykonany
+        /// do statusbara na g³ownym oknie
         emit setStatusBarLabel(QString("Generowanie: ")+QString("%1").arg((y*100)/(_heightOfImage_Y-1))+QString("%"));
     }
 
+    /// po skoñczeniu algorytmu, przes³¹nie do g³ownego okna postêp jaki zosta³ wykonany
+    /// oraz rozdzielczoœc wygenerowanego stereogramu
     emit setStatusBarLabel(QString("Generowanie: 100% | Wygenerowano obrazek: ")+QString("%1").arg(_widthOfImage_X)+QString("x")+QString("%1").arg(_heightOfImage_Y));
 
+    /// jeœli u¿ytkownik zaznaczy³ tak¹ opcjê to stereogramy s¹ generowane z pomocniczymi kropkami
+    /// dok³adniejszy opis znajduje siê w funkcji
     if(circles)
         drawCirclesOnImage(_widthOfImage_X,_heightOfImage_Y);
 
-    // czyszczenie pamiêci
+    /// czyszczenie pamiêci - usuwanie tymczasowej tablicy pixeli
     for(int i=0;i<_widthOfImage_X;++i)
         delete [] imageDepth[i];
     delete [] imageDepth;
 
+    /// po 1 wygenerowaniu obrazka waroœæ _wygerowano zmienia siê na true
+    /// pomaga to zapobiec póŸniejszym wyciekom pamiêci
     _wygenerowano = true;
 }
 
 void StereogramGenerator::calculateImageDepth(double **imageDepth, int convex)
 {
+    /// tworzenie tymczasowej zmiennej, której wartoœæ bêdzie zale¿eæ od tego czy
+    /// generowane wartoœci maj¹ byæ dla stereogramu wypuk³ego ( normalnie widoczny stereogram )
+    /// czy wklês³ego ( gdzie kolor bia³y jest bli¿ej nas a czarny dalej )
     float tmp;
     if(convex)
         tmp = 1.0;
     else
         tmp=-1.0;
 
+    /// przejœcie po wszystkich pixelach na szeroœci
+    /// dla ka¿dego, przejœcie przez wszystkie pionowe pixele
+    /// nastêpnie wype³nienie tablicy dwuwymiarowej imageDepth[x][y] - wartoœciami danego pixela ( w skali szaroœci )
     for(int x=0;x<_imageCopy->width();++x)
     {
         for(int y=0;y<_imageCopy->height();++y)
@@ -235,6 +280,9 @@ void StereogramGenerator::calculateImageDepth(double **imageDepth, int convex)
 
 void StereogramGenerator::drawCirclesOnImage(int _widthOfImage_X, int _heightOfImage_Y)
 {
+    /// rysowanie za pomoc¹ QPainter'a na obrazku _imageGeneratedStereogram
+    /// pomocniczych czarnych kropek ( opcjonalnie, dla u¿ytkownika )
+    /// czarne kropki s¹ w zadanej odleg³oœci od siebie - tak aby z dwóch ( u¿ytkownik programu zobaczy³ trzy )
     QPainter p;
     p.begin(_imageGeneratedStereogram);
     p.setBrush(QBrush(Qt::black));
