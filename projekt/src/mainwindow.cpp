@@ -246,6 +246,7 @@ void MainWindow::on_pushButton_Games_clicked()
      model = new QStringListModel(listaGier);
      ui->listView->setModel(model);
      file.close();
+     onStatusBarChanged("Wybierz gre w ktora chcesz zagrac");
 }
 
 void MainWindow::on_pushButton_Save_clicked()
@@ -267,6 +268,7 @@ void MainWindow::on_pushButton_wg_Graj_clicked()
 void MainWindow::on_pushButton_wg_Menu_clicked()
 {
     ui->stackedWidget->setCurrentIndex(0);
+    onStatusBarChanged("");
 }
 
 
@@ -290,6 +292,7 @@ void MainWindow::loadGame(QString gra)
     ui->lineEdit_game_haslo->setText("");
     statsGame(0);
     showGame();
+    onStatusBarChanged("Wybrales " + tytulGra + ". Co widzisz na pierwszym obrazku?");
 }
 
 
@@ -341,11 +344,15 @@ void MainWindow::on_pushButton_game_Ok_clicked()
 
     if(ktoryObrazekGra<ileObrazkowGra){
         showGame();
-
+        if(odpowiedz==1) onStatusBarChanged("Twoje odpowiedz byla prawidlowa. Co widzisz na kolejnym obrazku?");
+        if(odpowiedz==0) onStatusBarChanged("Twoje odpowiedz byla zla. Co widzisz na kolejnym obrazku?");
         } else
             {
+            if(odpowiedz==1) onStatusBarChanged("Twoje odpowiedz byla prawidlowa. Gra skonczona");
+            if(odpowiedz==0) onStatusBarChanged("Twoje odpowiedz byla zla. Gra skonczona");
             endGame();
             }
+
 }
 
 
@@ -354,11 +361,13 @@ void MainWindow::endGame(){
     ui->stackedWidget->setCurrentIndex(4);
     ui->lcdNumber_end_punkty->display(punktyGra);
 
+
 }
 
 void MainWindow::on_pushButton_2_end_menu_clicked()
 {
     ui->stackedWidget->setCurrentIndex(0);
+    onStatusBarChanged("");
 }
 
 
@@ -371,6 +380,7 @@ void MainWindow::on_pushButton_Scenariusz_clicked()
     QStringListModel *model;
     model = new QStringListModel(fileListScen);
     ui->listView_scen_file->setModel(model);
+    onStatusBarChanged("Dodaj obrazki do swojej gry.");
 }
 
 
@@ -378,6 +388,7 @@ void MainWindow::on_pushButton_Scenariusz_clicked()
 void MainWindow::on_pushButton_scen_menu_clicked()
 {
     ui->stackedWidget->setCurrentIndex(0);
+    onStatusBarChanged("");
 }
 
 
@@ -392,7 +403,7 @@ void MainWindow::on_pushButton_scen_add_clicked()
      fileListScen.append(fileName);
      model = new QStringListModel(fileListScen);
      ui->listView_scen_file->setModel(model);
-     if(!fileName.isEmpty()) ui->pushButton_scen_dalej->setEnabled(true);
+     if(!fileName.isEmpty()) { ui->pushButton_scen_dalej->setEnabled(true); onStatusBarChanged("Obrazek dodany! Chcesz dodac kolejny?");}
 }
 
 
@@ -404,12 +415,14 @@ void MainWindow::on_pushButton_scen_dalej_clicked()
     ui->lineEdit_scen2_ile->setText(QString::number(ilefile-ilehaslo));
     ui->pushButton_scen2_ok->setEnabled(false);
     ui->lineEdit_scen2_haslo->setText("");
+    onStatusBarChanged("A teraz ustaw tytul i dodaj hasla do swojej gry.");
 }
 
 
 void MainWindow::on_pushButton_scen2_menu_clicked()
 {
     ui->stackedWidget->setCurrentIndex(0);
+    onStatusBarChanged("");
 }
 
 
@@ -417,6 +430,7 @@ void MainWindow::on_pushButton_scen2_add_clicked()
 {
     QStringListModel *model;
     QString haslo = ui->lineEdit_scen2_haslo->text();
+    if(haslo!=""){
     haslaListScen.append(haslo);
     model = new QStringListModel(haslaListScen);
     ui->listView_scen2_hasla->setModel(model);
@@ -428,6 +442,8 @@ void MainWindow::on_pushButton_scen2_add_clicked()
         ui->pushButton_scen2_ok->setEnabled(true);
         }
     ui->lineEdit_scen2_haslo->setText("");
+    onStatusBarChanged("Haslo dodane.");
+    }
 
 }
 
@@ -461,6 +477,7 @@ void MainWindow::on_pushButton_scen2_ok_clicked()
 
     file2.close();
     ui->stackedWidget->setCurrentIndex(0);
+    onStatusBarChanged("Scenariusz stworzony. MOzesz grac!");
 }
 
 void MainWindow::on_comboBox_activated(int index)
