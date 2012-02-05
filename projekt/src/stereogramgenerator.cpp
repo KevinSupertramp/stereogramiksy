@@ -211,15 +211,15 @@ void StereogramGenerator::generate(int convex, int color, bool circles, int size
                         /// jeœli nie s¹ - zamieniamy je miejscami
                         if (left_N_right > rightEye)
                         {
+                            leftEye = left_N_right;
+                            left_N_right = samePixels[leftEye];
+                        }
+                        else
+                        {
                             samePixels[leftEye] = rightEye;
                             leftEye = rightEye;
                             left_N_right = samePixels[leftEye];
                             rightEye = left_N_right;
-                        }
-                        else
-                        {
-                            leftEye = left_N_right;
-                            left_N_right = samePixels[leftEye];
                         }
                     }
 
