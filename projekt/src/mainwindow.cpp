@@ -5,6 +5,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    qDebug() << QImageReader::supportedImageFormats ();
 //    ui->widget->setWindowIcon(QIcon(":new/icon/stereo.png"));
     wczytano = false;
     ui->setupUi(this);

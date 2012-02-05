@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QFileDialog>
 #include <QStringListModel>
+#include <QImageReader>
 
 #include "stereogramgenerator.h"
 

@@ -43,6 +43,6 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.setWindowIcon(QIcon(":new/icon/stereo.png"));
     w.show();
-    
+
     return a.exec();
 }
