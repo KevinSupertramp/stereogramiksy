@@ -109,8 +109,8 @@ public:
         /**
          * calculateImageDepth - funkcja oblczaj¹ca "g³êbokoœæ" ( w skali szaroœci ) pixel po pixelu
          * ( dla koloru bia³ego - 0, dla koloru czarnego - 1 )
-         * @param maxX - szerokoœæ obrazka
-         * @param maxY - wysokoœæ obrazka
+         * @param **imageDepth - tablica, która zostanie uzupe³niona wartoœciami danych pixeli na skali szaroœci
+         * @param convex - wklês³oœæ
          * @see generate();
          * @see drawCirclesOnImage();
          * @return void
