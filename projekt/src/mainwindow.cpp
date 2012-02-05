@@ -493,7 +493,7 @@ void MainWindow::on_comboBox_activated(int index)
 void MainWindow::on_pushButton_Oprogramie_clicked()
 {
     ui->stackedWidget->setCurrentIndex(7);
-    onStatusBarChanged("Wprowadz nazwe swojej gry");
+    onStatusBarChanged("O pogramie...");
 }
 
 
