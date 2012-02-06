@@ -21,8 +21,3 @@ FORMS    += src/mainwindow.ui
 
 RESOURCES += \
             zasoby/ikony.qrc
-
-#CONFIG += static
-#CONFIG += dll
-#CONFIG += staticlib
-
