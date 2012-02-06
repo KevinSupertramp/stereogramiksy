@@ -276,6 +276,8 @@ void MainWindow::on_pushButton_wg_Menu_clicked()
 
 void MainWindow::loadGame(QString gra)
 {
+    adresObrazkaGra.clear();
+    hasloObrazkaGra.clear();
     ui->stackedWidget->setCurrentIndex(3);
     QFile file("gry/opisy/"+gra+".txt");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {}
@@ -295,6 +297,7 @@ void MainWindow::loadGame(QString gra)
     statsGame(0);
     showGame();
     onStatusBarChanged("Wybrales " + tytulGra + ". Co widzisz na pierwszym obrazku?");
+    ui->stackedWidget->setCurrentIndex(3);
 }
 
 
